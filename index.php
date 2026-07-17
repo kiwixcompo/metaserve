@@ -55,35 +55,67 @@ if (isset($_SESSION['user_id'])) {
     </div>
 </section>
 
-<!-- About Us & Skills Section -->
-<section class="py-5 bg-white">
+<!-- About Us Section -->
+<section class="py-5 bg-white" id="about">
     <div class="container py-5">
         <div class="row align-items-center gy-5 justify-content-center">
-            <div class="col-lg-10 text-center">
+            <div class="col-lg-6 pe-lg-5">
                 <h6 class="text-primary-custom text-uppercase fw-bold mb-2">About Metaserve</h6>
-                <h2 class="text-dark fw-bold mb-4 display-6">Bridging the Gap Between Academia and the Tech Industry</h2>
-                <p class="text-muted mb-5 mx-auto" style="font-size: 1.1rem; line-height: 1.8; max-width: 800px;">
-                    Metaserve Info Tech Ltd is a premier digital skills training institute. We specialize in transforming university students and external candidates into job-ready professionals by equipping them with practical, hands-on technological skills.
+                <h2 class="text-dark fw-bold mb-4 display-6">Empowering the Next Generation of Digital Leaders</h2>
+                <p class="text-muted mb-4" style="font-size: 1.1rem; line-height: 1.8;">
+                    <strong>Metaserve Info Tech Ltd</strong> is a premier technology and digital skills training institute. We specialize in bridging the critical gap between academic theory and practical industry requirements. By intelligently mapping industry-standard ICT skills to specific academic disciplines, we ensure our students—whether from the university or the general public—are fully equipped for the modern digital economy.
                 </p>
-                <div class="row justify-content-center text-start">
-                    <div class="col-md-5 mb-4">
-                        <div class="d-flex align-items-start">
-                            <i class="fa-solid fa-check-circle text-primary-custom fs-3 me-3 mt-1"></i>
-                            <div>
-                                <h5 class="fw-bold text-dark mb-1">Industry-Vetted Curriculum</h5>
-                                <p class="text-muted small mb-0">Our courses are designed and updated by active industry experts.</p>
-                            </div>
+                <div class="d-flex flex-column gap-3 mb-4">
+                    <div class="d-flex align-items-start">
+                        <i class="fa-solid fa-graduation-cap text-primary-custom fs-4 me-3 mt-1"></i>
+                        <div>
+                            <h5 class="fw-bold text-dark mb-1">Tailored Curriculum</h5>
+                            <p class="text-muted small mb-0">Our courses are dynamically aligned with your specific field of study to maximize career impact.</p>
                         </div>
                     </div>
-                    <div class="col-md-5 mb-4">
-                        <div class="d-flex align-items-start">
-                            <i class="fa-solid fa-check-circle text-primary-custom fs-3 me-3 mt-1"></i>
-                            <div>
-                                <h5 class="fw-bold text-dark mb-1">Practical Assignments</h5>
-                                <p class="text-muted small mb-0">Learn by building real-world projects and case studies.</p>
-                            </div>
+                    <div class="d-flex align-items-start">
+                        <i class="fa-solid fa-certificate text-primary-custom fs-4 me-3 mt-1"></i>
+                        <div>
+                            <h5 class="fw-bold text-dark mb-1">Verified Certifications</h5>
+                            <p class="text-muted small mb-0">Earn globally recognized, tamper-proof certificates upon successful completion of your training.</p>
                         </div>
                     </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="clean-card p-5 bg-light border-0 shadow-sm rounded-4">
+                    <h4 class="fw-bold text-dark mb-4 border-bottom pb-3"><i class="fa-solid fa-headset text-primary-custom me-2"></i> Contact Us</h4>
+                    <p class="text-muted mb-4">Have questions about enrollment, course mappings, or our facilities? Reach out to our support team today.</p>
+                    
+                    <ul class="list-unstyled mb-0 d-flex flex-column gap-4">
+                        <li class="d-flex align-items-start">
+                            <div class="bg-white p-3 rounded-circle shadow-sm me-3 text-primary-custom d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                <i class="fa-solid fa-location-dot fs-5"></i>
+                            </div>
+                            <div>
+                                <h6 class="fw-bold mb-1">Our Location</h6>
+                                <p class="text-muted small mb-0">Metaserve Info Tech Ltd<br>Taraba State, Nigeria</p>
+                            </div>
+                        </li>
+                        <li class="d-flex align-items-start">
+                            <div class="bg-white p-3 rounded-circle shadow-sm me-3 text-primary-custom d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                <i class="fa-solid fa-envelope fs-5"></i>
+                            </div>
+                            <div>
+                                <h6 class="fw-bold mb-1">Email Address</h6>
+                                <p class="text-muted small mb-0">info@metaserve.com.ng<br>support@metaserve.com.ng</p>
+                            </div>
+                        </li>
+                        <li class="d-flex align-items-start">
+                            <div class="bg-white p-3 rounded-circle shadow-sm me-3 text-primary-custom d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                <i class="fa-solid fa-phone fs-5"></i>
+                            </div>
+                            <div>
+                                <h6 class="fw-bold mb-1">Phone Number</h6>
+                                <p class="text-muted small mb-0">+234 (0) 800 000 0000<br><span class="text-muted" style="font-size: 0.8rem;">(Mon - Fri, 8AM - 5PM)</span></p>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>

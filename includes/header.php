@@ -19,7 +19,21 @@
 </head>
 <body>
 
-<!-- Navbar -->
+<!-- Client Preview / Development Banner -->
+<div style="position: fixed; bottom: 30px; left: 30px; background: linear-gradient(135deg, #1e5631, #4c9a2a); color: white; padding: 12px 24px; border-radius: 50px; font-weight: bold; font-size: 14px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); z-index: 9999; display: flex; align-items: center; gap: 12px; border: 2px solid rgba(255,255,255,0.2); animation: pulse-dev 2s infinite;">
+    <i class="fa-solid fa-person-digging fs-4"></i>
+    <div>
+        <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.85; margin-bottom: 2px;">Client Preview Mode</div>
+        <div style="margin: 0; line-height: 1;">Development in Progress</div>
+    </div>
+</div>
+<style>
+@keyframes pulse-dev {
+    0% { box-shadow: 0 0 0 0 rgba(76, 154, 42, 0.6); }
+    70% { box-shadow: 0 0 0 12px rgba(76, 154, 42, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(76, 154, 42, 0); }
+}
+</style><!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
     <div class="container">
         <a class="navbar-brand d-flex align-items-center" href="<?= BASE_URL ?>">

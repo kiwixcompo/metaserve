@@ -7,7 +7,11 @@ ini_set('error_log', __DIR__ . '/../error.log');
 // Note: If error.log is deleted, PHP will automatically recreate it upon the next error.
 
 // Base URL (Change for production)
-define('BASE_URL', 'http://localhost/metaserve/');
+if (isset($_SERVER['HTTP_HOST']) && ($_SERVER['HTTP_HOST'] == 'localhost' || $_SERVER['HTTP_HOST'] == '127.0.0.1')) {
+    define('BASE_URL', 'http://localhost/metaserve/');
+} else {
+    define('BASE_URL', 'https://metaserve.com.ng/');
+}
 define('SITE_NAME', 'Digital Skills Portal - Metaserve Info Tech Ltd');
 
 // Database Configuration

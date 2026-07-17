@@ -15,10 +15,17 @@ if (isset($_SERVER['HTTP_HOST']) && ($_SERVER['HTTP_HOST'] == 'localhost' || $_S
 define('SITE_NAME', 'Digital Skills Portal - Metaserve Info Tech Ltd');
 
 // Database Configuration
-define('DB_HOST', 'localhost');
-define('DB_USER', 'root');
-define('DB_PASS', ''); // Set your DB password
-define('DB_NAME', 'digital_skills_db');
+if (isset($_SERVER['HTTP_HOST']) && ($_SERVER['HTTP_HOST'] == 'localhost' || $_SERVER['HTTP_HOST'] == '127.0.0.1')) {
+    define('DB_HOST', 'localhost');
+    define('DB_USER', 'root');
+    define('DB_PASS', ''); // Local DB password
+    define('DB_NAME', 'digital_skills_db');
+} else {
+    define('DB_HOST', 'localhost');
+    define('DB_USER', 'metaserv_metaserve_user');
+    define('DB_PASS', '_fyepMulyzhTQk&a');
+    define('DB_NAME', 'metaserv_metaserve_website');
+}
 
 // Paystack API Configuration
 define('PAYSTACK_PUBLIC_KEY', 'pk_test_xxxxxxxxxxxxxxxxxxxxxxxx');

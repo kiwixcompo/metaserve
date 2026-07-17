@@ -27,8 +27,7 @@ class Database {
             $this->dbh = new PDO($dsn, $this->user, $this->pass, $options);
         } catch (PDOException $e) {
             $this->error = $e->getMessage();
-            // In a production environment, you should log this error and display a generic message.
-            die("Database Connection Failed. Please try again later.");
+            die("Database Connection Error: " . $e->getMessage());
         }
     }
 

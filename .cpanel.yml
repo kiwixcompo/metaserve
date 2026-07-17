@@ -1,0 +1,5 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/metaserv/public_html/
+    - /bin/cp -R * $DEPLOYPATH

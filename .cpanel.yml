@@ -2,9 +2,7 @@
 deployment:
   tasks:
     - export DEPLOYPATH=/home/metaserv/public_html/
-    - /bin/cp -R accounts admin assets config coordinator database facilitator includes src student $DEPLOYPATH
-    - /bin/cp courses.php deploy.php index.php login.php payment.php register.php seed_matrix.php seed_users.php verify_payment.php $DEPLOYPATH
-    - /bin/chmod 755 $DEPLOYPATH
-    - /usr/bin/find $DEPLOYPATH -type d -exec chmod 755 {} +
-    - /usr/bin/find $DEPLOYPATH -type f -exec chmod 644 {} +
+    - /bin/cp -fR accounts admin assets config coordinator database facilitator includes src student $DEPLOYPATH
+    - /bin/cp -f courses.php index.php login.php payment.php register.php seed_matrix.php seed_users.php verify_payment.php $DEPLOYPATH
     - /bin/rm -f $DEPLOYPATH/sync.bat
+    - /bin/rm -f $DEPLOYPATH/deploy.php

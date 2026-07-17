@@ -46,8 +46,9 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
                 <li class="nav-item"><a class="nav-link px-3" href="<?= BASE_URL ?>">Home</a></li>
-                <li class="nav-item"><a class="nav-link px-3" href="#">About</a></li>
+                <li class="nav-item"><a class="nav-link px-3" href="<?= BASE_URL ?>about.php">About</a></li>
                 <li class="nav-item"><a class="nav-link px-3" href="<?= BASE_URL ?>courses.php">Courses</a></li>
+                <li class="nav-item"><a class="nav-link px-3" href="<?= BASE_URL ?>contact.php">Contact</a></li>
                 <?php if (isset($_SESSION['user_id'])): ?>
                     <li class="nav-item"><a class="nav-link px-3" href="<?= BASE_URL ?>src/Controllers/AuthController.php?action=logout">Logout</a></li>
                 <?php else: ?>

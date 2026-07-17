@@ -3,3 +3,8 @@ deployment:
   tasks:
     - export DEPLOYPATH=/home/metaserv/public_html/
     - /bin/cp -R * $DEPLOYPATH
+    - /bin/chmod 755 $DEPLOYPATH
+    - /usr/bin/find $DEPLOYPATH -type d -exec chmod 755 {} \;
+    - /usr/bin/find $DEPLOYPATH -type f -exec chmod 644 {} \;
+    - /bin/rm -f $DEPLOYPATH/index.html
+    - /bin/rm -f $DEPLOYPATH/sync.bat

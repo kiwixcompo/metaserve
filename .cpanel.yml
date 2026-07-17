@@ -2,7 +2,8 @@
 deployment:
   tasks:
     - export DEPLOYPATH=/home/metaserv/public_html/
-    - /bin/cp -fR accounts admin assets config coordinator database facilitator includes src student $DEPLOYPATH
-    - /bin/cp -f courses.php index.php install_db.php login.php payment.php register.php seed_matrix.php seed_users.php verify_payment.php $DEPLOYPATH
+    - /bin/cp -fR * $DEPLOYPATH
+    - /bin/rm -rf $DEPLOYPATH/.git
+    - /bin/rm -f $DEPLOYPATH/.cpanel.yml
     - /bin/rm -f $DEPLOYPATH/sync.bat
     - /bin/rm -f $DEPLOYPATH/deploy.php

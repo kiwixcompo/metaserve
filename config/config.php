@@ -2,6 +2,8 @@
 // Phase 2: Centralized Configuration
 
 // Global Error Logging Configuration
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
 ini_set('log_errors', 1);
 ini_set('error_log', __DIR__ . '/../error.log');
 // Note: If error.log is deleted, PHP will automatically recreate it upon the next error.

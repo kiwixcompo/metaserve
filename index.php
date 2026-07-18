@@ -111,8 +111,12 @@ if (isset($_SESSION['user_id'])) {
                                 <i class="fa-solid fa-phone fs-5"></i>
                             </div>
                             <div>
-                                <h6 class="fw-bold mb-1">Phone Number</h6>
-                                <p class="text-muted small mb-0">+234 (0) 800 000 0000<br><span class="text-muted" style="font-size: 0.8rem;">(Mon - Fri, 8AM - 5PM)</span></p>
+                                <h6 class="fw-bold mb-1">Phone Numbers</h6>
+                                <p class="text-muted small mb-0">
+                                    <strong>Admin/help desk:</strong> 09055875069, 0806 486 6016<br>
+                                    <strong>Technical Support:</strong> 08082768855<br>
+                                    <span class="text-muted" style="font-size: 0.8rem;">(Mon - Fri, 8AM - 5PM)</span>
+                                </p>
                             </div>
                         </li>
                     </ul>

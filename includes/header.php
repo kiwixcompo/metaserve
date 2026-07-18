@@ -38,7 +38,10 @@
     <div class="container">
         <a class="navbar-brand d-flex align-items-center" href="<?= BASE_URL ?>">
             <img src="<?= BASE_URL ?>assets/images/logo.png" alt="Metaserve Logo" onerror="this.src='https://via.placeholder.com/40x40?text=M';">
-            <span>Metaserve Portal</span>
+            <div class="d-flex flex-column ms-2">
+                <span class="fs-5 fw-bold" style="line-height: 1.2;">Metaserve Info Tech</span>
+                <span style="font-size: 0.75rem; color: #6c757d; font-weight: normal; margin-top: 2px;">The Hackathon Hub</span>
+            </div>
         </a>
         <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>

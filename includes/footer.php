@@ -4,7 +4,10 @@
             <div class="col-md-4">
                 <div class="d-flex align-items-center mb-3">
                     <img src="<?= BASE_URL ?>assets/images/logo.png" alt="Metaserve Logo" style="height: 40px; margin-right: 10px;" onerror="this.src='https://via.placeholder.com/40x40?text=M';">
-                    <h5 class="mb-0 fw-bold text-primary-custom">Metaserve Portal</h5>
+                    <div>
+                        <h5 class="mb-0 fw-bold text-primary-custom" style="line-height: 1.2;">Metaserve Info Tech</h5>
+                        <small class="text-muted d-block" style="font-size: 0.85rem; margin-top: 2px;">The Hackathon Hub</small>
+                    </div>
                 </div>
                 <p class="text-muted" style="font-size: 0.95rem; line-height: 1.7;">Empowering the next generation with world-class digital skills and technological education.</p>
             </div>

@@ -44,8 +44,12 @@
                             <i class="fa-solid fa-phone fs-4"></i>
                         </div>
                         <div>
-                            <h5 class="fw-bold text-dark mb-1">Phone Number</h5>
-                            <p class="text-muted mb-0">+234 (0) 800 000 0000<br><span class="text-muted small">(Mon - Fri, 8AM - 5PM)</span></p>
+                            <h5 class="fw-bold text-dark mb-1">Phone Numbers</h5>
+                            <p class="text-muted mb-0">
+                                <strong>Admin/help desk:</strong> 09055875069, 0806 486 6016<br>
+                                <strong>Technical Support:</strong> 08082768855<br>
+                                <span class="text-muted small">(Mon - Fri, 8AM - 5PM)</span>
+                            </p>
                         </div>
                     </li>
                 </ul>

@@ -13,8 +13,14 @@ class AuthController {
     public function handleRegister($postData) {
         $errors = [];
         
+        // Split full_name
+        $nameParts = explode(' ', trim($postData['full_name'] ?? ''));
+        $postData['first_name'] = $nameParts[0] ?? '';
+        unset($nameParts[0]);
+        $postData['last_name'] = !empty($nameParts) ? implode(' ', $nameParts) : '';
+
         // 1. Basic Validation
-        if (empty($postData['first_name']) || empty($postData['last_name']) || empty($postData['email']) || empty($postData['password']) || empty($postData['type'])) {
+        if (empty($postData['first_name']) || empty($postData['email']) || empty($postData['password']) || empty($postData['type'])) {
             $errors[] = "Please fill in all required fields.";
         }
 
@@ -27,9 +33,7 @@ class AuthController {
         }
 
         // 2. TSU Student vs External Candidate Logic
-        // Determine Role ID based on type (5 = Student, 6 = External Candidate)
         $role_id = 6; // Default to external
-        
         if ($postData['type'] === 'tsu_student') {
             $role_id = 5;
         } elseif ($postData['type'] === 'external') {
@@ -38,16 +42,17 @@ class AuthController {
             $errors[] = "Invalid user type selected.";
         }
 
-        // Generate Registration Number
-        if (empty($errors)) {
-            $prefix = ($postData['type'] === 'tsu_student') ? 'MIT/INT/' : 'MIT/EXT/';
-            $year = date('Y');
-            do {
-                $rand = str_pad(rand(1, 99999), 5, '0', STR_PAD_LEFT);
-                $reg_number = $prefix . $year . '/' . $rand;
-            } while ($this->userModel->regNumberExists($reg_number));
-            
-            $postData['reg_number'] = $reg_number;
+        // Generate Registration ID (e.g. MSV-TSU-XXXX)
+        $prefix = ($postData['type'] === 'tsu_student') ? 'MSV-TSU-' : 'MSV-EXT-';
+        $postData['registration_id'] = $prefix . date('Y') . '-' . strtoupper(substr(uniqid(), -5));
+
+        // Generate Reg Number (old logic for reg_number fallback)
+        if ($postData['type'] === 'tsu_student' && empty($postData['reg_number'])) {
+            // TSU students must provide matric number. If not, error.
+            $errors[] = "Matriculation number is required for TSU students.";
+        } elseif ($postData['type'] === 'external') {
+            // Generate reg number for external if we want to keep it or just leave null
+            $postData['reg_number'] = null;
         }
 
         // 3. Return errors if any

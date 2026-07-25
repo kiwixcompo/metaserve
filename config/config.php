@@ -30,8 +30,21 @@ if (isset($_SERVER['HTTP_HOST']) && ($_SERVER['HTTP_HOST'] == 'localhost' || $_S
 }
 
 // Paystack API Configuration
-define('PAYSTACK_PUBLIC_KEY', 'pk_test_xxxxxxxxxxxxxxxxxxxxxxxx');
-define('PAYSTACK_SECRET_KEY', 'your_paystack_secret_key_here');
+require_once __DIR__ . '/database.php';
+try {
+    $db = new Database();
+    $conn = $db->getConnection();
+    $stmt = $conn->query("SELECT setting_key, setting_value FROM settings WHERE setting_key IN ('paystack_public_key', 'paystack_secret_key')");
+    $settings = [];
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $settings[$row['setting_key']] = $row['setting_value'];
+    }
+    define('PAYSTACK_PUBLIC_KEY', $settings['paystack_public_key'] ?? 'pk_test_xxxxxxxxxxxxxxxxxxxxxxxx');
+    define('PAYSTACK_SECRET_KEY', $settings['paystack_secret_key'] ?? 'your_paystack_secret_key_here');
+} catch (Exception $e) {
+    define('PAYSTACK_PUBLIC_KEY', 'pk_test_xxxxxxxxxxxxxxxxxxxxxxxx');
+    define('PAYSTACK_SECRET_KEY', 'your_paystack_secret_key_here');
+}
 
 // File Upload Configurations
 define('UPLOAD_DIR', __DIR__ . '/../uploads/');

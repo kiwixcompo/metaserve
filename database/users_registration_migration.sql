@@ -1,0 +1,15 @@
+ALTER TABLE `users`
+ADD COLUMN `dob` DATE NULL AFTER `last_name`,
+ADD COLUMN `gender` ENUM('Male', 'Female') NULL AFTER `dob`,
+ADD COLUMN `nationality` VARCHAR(100) NULL AFTER `gender`,
+ADD COLUMN `state_of_origin` VARCHAR(100) NULL AFTER `nationality`,
+ADD COLUMN `lga` VARCHAR(100) NULL AFTER `state_of_origin`,
+ADD COLUMN `alt_phone` VARCHAR(20) NULL AFTER `phone`,
+ADD COLUMN `department_id` INT NULL AFTER `reg_number`,
+ADD COLUMN `level` VARCHAR(20) NULL AFTER `department_id`,
+ADD COLUMN `highest_qualification` VARCHAR(100) NULL AFTER `level`,
+ADD COLUMN `occupation` VARCHAR(100) NULL AFTER `highest_qualification`,
+ADD COLUMN `faculty_interest` VARCHAR(150) NULL AFTER `occupation`,
+ADD COLUMN `how_did_you_hear` VARCHAR(150) NULL AFTER `faculty_interest`,
+ADD COLUMN `why_join` TEXT NULL AFTER `how_did_you_hear`,
+ADD COLUMN `registration_id` VARCHAR(50) NULL UNIQUE AFTER `why_join`;

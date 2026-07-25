@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../config/config.php';
 require_once __DIR__ . '/../src/Models/Admin.php';
+require_once __DIR__ . '/../src/Models/Settings.php';
 
 if (!isset($_SESSION['user_id']) || $_SESSION['role_id'] != 1) {
     header("Location: " . BASE_URL . "login.php");
@@ -11,6 +12,9 @@ $adminModel = new Admin();
 $metrics = $adminModel->getMetrics();
 $allUsers = $adminModel->getAllUsers();
 $facilitators = $adminModel->getFacilitators();
+
+$settingsModel = new Settings();
+$settingsData = $settingsModel->getAllSettings();
 
 // Fetch Data for new tabs
 $db = new Database();
@@ -216,7 +220,52 @@ require_once __DIR__ . '/../includes/header.php';
                     <div class="tab-pane fade <?= $activeTab === 'settings' ? 'show active' : '' ?>" id="settings" role="tabpanel">
                         <div class="clean-card p-4 shadow-sm">
                             <h5 class="fw-bold text-dark mb-4">System Settings</h5>
-                            <div class="alert alert-info border-0"><i class="fa-solid fa-gear me-2"></i> Settings functionality will be implemented in the configuration module.</div>
+                            <form action="<?= BASE_URL ?>src/Controllers/AdminController.php?action=update_settings" method="POST" enctype="multipart/form-data">
+                                <h6 class="fw-bold mt-4 mb-3">Slider Images (Leave blank to keep current)</h6>
+                                <div class="mb-3">
+                                    <label class="form-label text-muted small fw-bold">Slider Image 1</label>
+                                    <input type="file" name="slider_image_1" class="form-control clean-form-control" accept="image/*">
+                                    <?php if(!empty($settingsData['slider_image_1'])): ?>
+                                        <div class="mt-2"><img src="<?= BASE_URL . $settingsData['slider_image_1'] ?>" style="height: 50px;"></div>
+                                    <?php endif; ?>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label text-muted small fw-bold">Slider Image 2</label>
+                                    <input type="file" name="slider_image_2" class="form-control clean-form-control" accept="image/*">
+                                    <?php if(!empty($settingsData['slider_image_2'])): ?>
+                                        <div class="mt-2"><img src="<?= BASE_URL . $settingsData['slider_image_2'] ?>" style="height: 50px;"></div>
+                                    <?php endif; ?>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label text-muted small fw-bold">Slider Image 3</label>
+                                    <input type="file" name="slider_image_3" class="form-control clean-form-control" accept="image/*">
+                                    <?php if(!empty($settingsData['slider_image_3'])): ?>
+                                        <div class="mt-2"><img src="<?= BASE_URL . $settingsData['slider_image_3'] ?>" style="height: 50px;"></div>
+                                    <?php endif; ?>
+                                </div>
+
+                                <h6 class="fw-bold mt-4 mb-3">Contact Details</h6>
+                                <div class="mb-3">
+                                    <label class="form-label text-muted small fw-bold">Admin/Help Desk Phone</label>
+                                    <input type="text" name="contact_admin_phone" class="form-control clean-form-control" value="<?= htmlspecialchars($settingsData['contact_admin_phone'] ?? '') ?>">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label text-muted small fw-bold">Technical Support Phone</label>
+                                    <input type="text" name="contact_tech_phone" class="form-control clean-form-control" value="<?= htmlspecialchars($settingsData['contact_tech_phone'] ?? '') ?>">
+                                </div>
+
+                                <h6 class="fw-bold mt-4 mb-3">Paystack Configuration</h6>
+                                <div class="mb-3">
+                                    <label class="form-label text-muted small fw-bold">Public Key</label>
+                                    <input type="text" name="paystack_public_key" class="form-control clean-form-control" value="<?= htmlspecialchars($settingsData['paystack_public_key'] ?? '') ?>">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label text-muted small fw-bold">Secret Key</label>
+                                    <input type="text" name="paystack_secret_key" class="form-control clean-form-control" value="<?= htmlspecialchars($settingsData['paystack_secret_key'] ?? '') ?>">
+                                </div>
+
+                                <button type="submit" class="btn btn-primary-custom px-4 mt-3">Save Settings</button>
+                            </form>
                         </div>
                     </div>
                     

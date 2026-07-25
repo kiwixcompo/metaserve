@@ -1,4 +1,9 @@
-<?php require_once __DIR__ . '/includes/header.php'; ?>
+<?php require_once __DIR__ . '/includes/header.php';
+require_once __DIR__ . '/src/Models/Settings.php';
+
+$settingsModel = new Settings();
+$settingsData = $settingsModel->getAllSettings();
+?>
 
 <!-- Page Header -->
 <section class="py-5 bg-light mt-5">
@@ -46,8 +51,8 @@
                         <div>
                             <h5 class="fw-bold text-dark mb-1">Phone Numbers</h5>
                             <p class="text-muted mb-0">
-                                <strong>Admin/help desk:</strong> 09055875069, 0806 486 6016<br>
-                                <strong>Technical Support:</strong> 08082768855<br>
+                                <strong>Admin/help desk:</strong> <?= htmlspecialchars($settingsData['contact_admin_phone'] ?? '09055875069, 0806 486 6016') ?><br>
+                                <strong>Technical Support:</strong> <?= htmlspecialchars($settingsData['contact_tech_phone'] ?? '08082768855') ?><br>
                                 <span class="text-muted small">(Mon - Fri, 8AM - 5PM)</span>
                             </p>
                         </div>

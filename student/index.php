@@ -20,7 +20,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'bypass_payment') {
 }
 
 // Fetch Enrollments
-$stmt = $conn->prepare("SELECT e.*, p.name as prog_name, c.name as course_name FROM enrollments e JOIN programmes p ON e.programme_id = p.id LEFT JOIN courses c ON e.course_id = c.id WHERE e.user_id = :uid");
+$stmt = $conn->prepare("SELECT e.*, p.name as prog_name FROM enrollments e JOIN programmes p ON e.programme_id = p.id WHERE e.user_id = :uid");
 $stmt->execute(['uid' => $_SESSION['user_id']]);
 $enrollments = $stmt->fetchAll(PDO::FETCH_ASSOC);
 

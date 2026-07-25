@@ -1,0 +1,36 @@
+[22-Jul-2026 16:51:36 UTC] PHP Warning:  Undefined array key "role_id" in C:\wamp64\www\metaserve\index.php on line 10
+[22-Jul-2026 16:51:36 UTC] PHP Stack trace:
+[22-Jul-2026 16:51:36 UTC] PHP   1. {main}() C:\wamp64\www\metaserve\index.php:0
+[22-Jul-2026 16:51:36 UTC] PHP Warning:  Undefined array key "role_id" in C:\wamp64\www\metaserve\index.php on line 33
+[22-Jul-2026 16:51:36 UTC] PHP Stack trace:
+[22-Jul-2026 16:51:36 UTC] PHP   1. {main}() C:\wamp64\www\metaserve\index.php:0
+[22-Jul-2026 16:51:47 UTC] PHP Warning:  Undefined array key "role_id" in C:\wamp64\www\metaserve\index.php on line 10
+[22-Jul-2026 16:51:47 UTC] PHP Stack trace:
+[22-Jul-2026 16:51:47 UTC] PHP   1. {main}() C:\wamp64\www\metaserve\index.php:0
+[22-Jul-2026 16:51:47 UTC] PHP Warning:  Undefined array key "role_id" in C:\wamp64\www\metaserve\index.php on line 33
+[22-Jul-2026 16:51:47 UTC] PHP Stack trace:
+[22-Jul-2026 16:51:47 UTC] PHP   1. {main}() C:\wamp64\www\metaserve\index.php:0
+[22-Jul-2026 16:56:33 UTC] PHP Warning:  Undefined array key "role_id" in C:\wamp64\www\metaserve\index.php on line 10
+[22-Jul-2026 16:56:33 UTC] PHP Stack trace:
+[22-Jul-2026 16:56:33 UTC] PHP   1. {main}() C:\wamp64\www\metaserve\index.php:0
+[22-Jul-2026 16:56:33 UTC] PHP Warning:  Undefined array key "role_id" in C:\wamp64\www\metaserve\index.php on line 33
+[22-Jul-2026 16:56:33 UTC] PHP Stack trace:
+[22-Jul-2026 16:56:33 UTC] PHP   1. {main}() C:\wamp64\www\metaserve\index.php:0
+[22-Jul-2026 16:56:35 UTC] PHP Warning:  Undefined array key "role_id" in C:\wamp64\www\metaserve\index.php on line 10
+[22-Jul-2026 16:56:35 UTC] PHP Stack trace:
+[22-Jul-2026 16:56:35 UTC] PHP   1. {main}() C:\wamp64\www\metaserve\index.php:0
+[22-Jul-2026 16:56:35 UTC] PHP Warning:  Undefined array key "role_id" in C:\wamp64\www\metaserve\index.php on line 33
+[22-Jul-2026 16:56:35 UTC] PHP Stack trace:
+[22-Jul-2026 16:56:35 UTC] PHP   1. {main}() C:\wamp64\www\metaserve\index.php:0
+[22-Jul-2026 17:04:06 UTC] PHP Warning:  Undefined array key "role_id" in C:\wamp64\www\metaserve\index.php on line 10
+[22-Jul-2026 17:04:06 UTC] PHP Stack trace:
+[22-Jul-2026 17:04:06 UTC] PHP   1. {main}() C:\wamp64\www\metaserve\index.php:0
+[22-Jul-2026 17:04:06 UTC] PHP Warning:  Undefined array key "role_id" in C:\wamp64\www\metaserve\index.php on line 33
+[22-Jul-2026 17:04:06 UTC] PHP Stack trace:
+[22-Jul-2026 17:04:06 UTC] PHP   1. {main}() C:\wamp64\www\metaserve\index.php:0
+[22-Jul-2026 17:04:35 UTC] PHP Warning:  Undefined array key "role_id" in C:\wamp64\www\metaserve\index.php on line 10
+[22-Jul-2026 17:04:35 UTC] PHP Stack trace:
+[22-Jul-2026 17:04:35 UTC] PHP   1. {main}() C:\wamp64\www\metaserve\index.php:0
+[22-Jul-2026 17:04:35 UTC] PHP Warning:  Undefined array key "role_id" in C:\wamp64\www\metaserve\index.php on line 33
+[22-Jul-2026 17:04:35 UTC] PHP Stack trace:
+[22-Jul-2026 17:04:35 UTC] PHP   1. {main}() C:\wamp64\www\metaserve\index.php:0

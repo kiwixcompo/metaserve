@@ -33,27 +33,41 @@ class User {
     // Register a new user
     public function register($data) {
         $query = "INSERT INTO " . $this->table . " 
-                  (role_id, first_name, last_name, email, password_hash, phone, type, reg_number) 
-                  VALUES (:role_id, :first_name, :last_name, :email, :password_hash, :phone, :type, :reg_number)";
+                  (role_id, first_name, last_name, email, password_hash, phone, type, reg_number,
+                   dob, gender, nationality, state_of_origin, lga, alt_phone, department_id, level,
+                   highest_qualification, occupation, faculty_interest, how_did_you_hear, why_join, registration_id) 
+                  VALUES (:role_id, :first_name, :last_name, :email, :password_hash, :phone, :type, :reg_number,
+                   :dob, :gender, :nationality, :state_of_origin, :lga, :alt_phone, :department_id, :level,
+                   :highest_qualification, :occupation, :faculty_interest, :how_did_you_hear, :why_join, :registration_id)";
         
         $stmt = $this->conn->prepare($query);
 
-        // Sanitize & Bind (using bindValue for direct values to prevent pass-by-reference notices)
         $stmt->bindValue(':role_id', $data['role_id']);
         $stmt->bindValue(':first_name', htmlspecialchars(strip_tags($data['first_name'])));
         $stmt->bindValue(':last_name', htmlspecialchars(strip_tags($data['last_name'])));
         $stmt->bindValue(':email', htmlspecialchars(strip_tags($data['email'])));
-        
-        // Hash the password securely using bcrypt
-        $password_hash = password_hash($data['password'], PASSWORD_BCRYPT);
-        $stmt->bindValue(':password_hash', $password_hash);
-        
+        $stmt->bindValue(':password_hash', password_hash($data['password'], PASSWORD_BCRYPT));
         $stmt->bindValue(':phone', htmlspecialchars(strip_tags($data['phone'])));
         $stmt->bindValue(':type', $data['type']);
+        $stmt->bindValue(':reg_number', $data['reg_number'] ?? null);
+
+        // New fields
+        $stmt->bindValue(':dob', $data['dob'] ?? null);
+        $stmt->bindValue(':gender', $data['gender'] ?? null);
+        $stmt->bindValue(':nationality', htmlspecialchars(strip_tags($data['nationality'] ?? '')));
+        $stmt->bindValue(':state_of_origin', htmlspecialchars(strip_tags($data['state_of_origin'] ?? '')));
+        $stmt->bindValue(':lga', htmlspecialchars(strip_tags($data['lga'] ?? '')));
+        $stmt->bindValue(':alt_phone', htmlspecialchars(strip_tags($data['alt_phone'] ?? '')));
         
-        // Handle Reg Number based on type
-        $reg_number = (isset($data['reg_number']) && !empty($data['reg_number'])) ? htmlspecialchars(strip_tags($data['reg_number'])) : null;
-        $stmt->bindValue(':reg_number', $reg_number);
+        $stmt->bindValue(':department_id', empty($data['department_id']) ? null : $data['department_id']);
+        $stmt->bindValue(':level', $data['level'] ?? null);
+        $stmt->bindValue(':highest_qualification', htmlspecialchars(strip_tags($data['highest_qualification'] ?? '')));
+        $stmt->bindValue(':occupation', htmlspecialchars(strip_tags($data['occupation'] ?? '')));
+        
+        $stmt->bindValue(':faculty_interest', htmlspecialchars(strip_tags($data['faculty_interest'] ?? '')));
+        $stmt->bindValue(':how_did_you_hear', htmlspecialchars(strip_tags($data['how_did_you_hear'] ?? '')));
+        $stmt->bindValue(':why_join', htmlspecialchars(strip_tags($data['why_join'] ?? '')));
+        $stmt->bindValue(':registration_id', $data['registration_id'] ?? null);
 
         if($stmt->execute()) {
             return $this->conn->lastInsertId();

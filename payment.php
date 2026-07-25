@@ -9,8 +9,38 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 // MOCK DATA for the demo (In production, fetch from the database based on session)
-$enrollment_id = 1; 
-$amount = 15000; // 15,000 NGN
+// Fetch actual pending enrollment
+require_once __DIR__ . '/config/database.php';
+$db = new Database();
+$conn = $db->getConnection();
+
+$stmt = $conn->prepare("SELECT e.id as enrollment_id, e.programme_id, p.name as prog_name 
+                        FROM enrollments e 
+                        JOIN programmes p ON e.programme_id = p.id 
+                        WHERE e.user_id = ? AND e.status = 'pending' 
+                        ORDER BY e.id DESC LIMIT 1");
+$stmt->execute([$_SESSION['user_id']]);
+$enrollment = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if (!$enrollment) {
+    header("Location: " . BASE_URL . "student/");
+    exit();
+}
+
+$enrollment_id = $enrollment['enrollment_id'];
+$amount = 0;
+
+// Dynamic Pricing Logic based on User Type
+$userType = $_SESSION['type'] ?? 'external';
+$progId = $enrollment['programme_id'];
+
+if ($progId == 1) { // Mandatory Computer Induction Course
+    $amount = ($userType === 'tsu_student') ? 20000 : 50000;
+} elseif ($progId == 2) { // Professional Upskilling Programme
+    $amount = ($userType === 'tsu_student') ? 40000 : 100000;
+} else {
+    $amount = 15000; // fallback
+}
 
 $error = '';
 $success = '';

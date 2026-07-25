@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../../config/config.php';
 require_once __DIR__ . '/../Models/Admin.php';
+require_once __DIR__ . '/../Models/Settings.php';
 
 // Security: Ensure only Super Admin (Role 1) can access this controller
 if (session_status() === PHP_SESSION_NONE) {
@@ -78,6 +79,43 @@ class AdminController {
         header("Location: " . BASE_URL . "admin/index.php?tab=skills");
         exit();
     }
+
+    public function updateSettings($postData, $fileData) {
+        $settingsModel = new Settings();
+        
+        // Handle text fields
+        $fields = ['contact_admin_phone', 'contact_tech_phone', 'paystack_public_key', 'paystack_secret_key'];
+        foreach ($fields as $field) {
+            if (isset($postData[$field])) {
+                $settingsModel->updateSetting($field, $postData[$field]);
+            }
+        }
+
+        // Handle file uploads for slider images
+        $uploadDir = UPLOAD_DIR . 'slider/';
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0777, true);
+        }
+
+        $imageFields = ['slider_image_1', 'slider_image_2', 'slider_image_3'];
+        foreach ($imageFields as $field) {
+            if (isset($fileData[$field]) && $fileData[$field]['error'] === UPLOAD_ERR_OK) {
+                $fileTmpPath = $fileData[$field]['tmp_name'];
+                $fileName = time() . '_' . basename($fileData[$field]['name']);
+                $destPath = $uploadDir . $fileName;
+
+                if (move_uploaded_file($fileTmpPath, $destPath)) {
+                    // Save relative path to DB
+                    $relativePath = 'uploads/slider/' . $fileName;
+                    $settingsModel->updateSetting($field, $relativePath);
+                }
+            }
+        }
+
+        $_SESSION['success_msg'] = "System settings updated successfully.";
+        header("Location: " . BASE_URL . "admin/index.php?tab=settings");
+        exit();
+    }
 }
 
 // Router Logic
@@ -101,5 +139,8 @@ if (isset($_GET['action'])) {
     }
     elseif ($_GET['action'] === 'delete_skill' && isset($_GET['id'])) {
         $controller->deleteSkill($_GET['id']);
+    }
+    elseif ($_GET['action'] === 'update_settings' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+        $controller->updateSettings($_POST, $_FILES);
     }
 }

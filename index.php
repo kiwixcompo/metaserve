@@ -1,5 +1,9 @@
 <?php 
 require_once __DIR__ . '/includes/header.php';
+require_once __DIR__ . '/src/Models/Settings.php';
+
+$settingsModel = new Settings();
+$settingsData = $settingsModel->getAllSettings();
 
 $enrollLink = BASE_URL . "register.php";
 if (isset($_SESSION['user_id'])) {
@@ -47,8 +51,39 @@ if (isset($_SESSION['user_id'])) {
             </div>
             
             <div class="col-lg-6 position-relative z-1 text-center">
-                <div class="position-relative d-inline-block rounded-4 overflow-hidden shadow-lg border border-4 border-white" style="transform: perspective(1000px) rotateY(-5deg); transition: transform 0.5s;">
-                    <img src="<?= BASE_URL ?>assets/images/banner.jpg" alt="Metaserve Banner" class="img-fluid" style="border-radius: 15px;">
+                <div class="position-relative d-inline-block rounded-4 overflow-hidden shadow-lg border border-4 border-white" style="transform: perspective(1000px) rotateY(-5deg); transition: transform 0.5s; width: 100%;">
+                    
+                    <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner" style="border-radius: 11px;">
+                            <?php 
+                            $images = [
+                                $settingsData['slider_image_1'] ?? 'assets/images/banner.jpg',
+                                $settingsData['slider_image_2'] ?? '',
+                                $settingsData['slider_image_3'] ?? ''
+                            ];
+                            $activeClass = 'active';
+                            foreach ($images as $img):
+                                if (!empty($img)):
+                            ?>
+                                <div class="carousel-item <?= $activeClass ?>">
+                                    <img src="<?= BASE_URL . htmlspecialchars($img) ?>" class="d-block w-100" alt="Slider Image" style="object-fit: cover; aspect-ratio: 16/9;">
+                                </div>
+                            <?php 
+                                $activeClass = '';
+                                endif;
+                            endforeach; 
+                            ?>
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -113,13 +148,79 @@ if (isset($_SESSION['user_id'])) {
                             <div>
                                 <h6 class="fw-bold mb-1">Phone Numbers</h6>
                                 <p class="text-muted small mb-0">
-                                    <strong>Admin/help desk:</strong> 09055875069, 0806 486 6016<br>
-                                    <strong>Technical Support:</strong> 08082768855<br>
+                                    <strong>Admin/help desk:</strong> <?= htmlspecialchars($settingsData['contact_admin_phone'] ?? '09055875069, 0806 486 6016') ?><br>
+                                    <strong>Technical Support:</strong> <?= htmlspecialchars($settingsData['contact_tech_phone'] ?? '08082768855') ?><br>
                                     <span class="text-muted" style="font-size: 0.8rem;">(Mon - Fri, 8AM - 5PM)</span>
                                 </p>
                             </div>
                         </li>
                     </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section><!-- Our Services Section -->
+<section class="py-5" id="services" style="background-color: #fff;">
+    <div class="container py-5">
+        <div class="text-center mb-5">
+            <h6 class="text-secondary-custom text-uppercase fw-bold mb-2">What We Do</h6>
+            <h2 class="text-dark fw-bold display-6 mb-3">Other Services Offered by Metaserve</h2>
+            <p class="text-muted mx-auto" style="font-size: 1.1rem; max-width: 700px;">Beyond student induction and upskilling, Metaserve Info Tech Limited provides a comprehensive suite of professional technology services.</p>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-4 col-sm-6">
+                <div class="p-4 rounded shadow-sm border h-100 d-flex flex-column align-items-center text-center">
+                    <i class="fa-solid fa-desktop fs-2 text-primary-custom mb-3"></i>
+                    <h6 class="fw-bold">General ICT Services</h6>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <div class="p-4 rounded shadow-sm border h-100 d-flex flex-column align-items-center text-center">
+                    <i class="fa-solid fa-chalkboard-user fs-2 text-primary-custom mb-3"></i>
+                    <h6 class="fw-bold">Training on IT Skills</h6>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <div class="p-4 rounded shadow-sm border h-100 d-flex flex-column align-items-center text-center">
+                    <i class="fa-solid fa-users-gear fs-2 text-primary-custom mb-3"></i>
+                    <h6 class="fw-bold">Recruitment of IT Skills on Behalf of Employers</h6>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <div class="p-4 rounded shadow-sm border h-100 d-flex flex-column align-items-center text-center">
+                    <i class="fa-solid fa-hand-holding-dollar fs-2 text-primary-custom mb-3"></i>
+                    <h6 class="fw-bold">Fundraising for ICT Projects</h6>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <div class="p-4 rounded shadow-sm border h-100 d-flex flex-column align-items-center text-center">
+                    <i class="fa-solid fa-microchip fs-2 text-primary-custom mb-3"></i>
+                    <h6 class="fw-bold">Supply of Computer Hardware & Software</h6>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <div class="p-4 rounded shadow-sm border h-100 d-flex flex-column align-items-center text-center">
+                    <i class="fa-solid fa-code fs-2 text-primary-custom mb-3"></i>
+                    <h6 class="fw-bold">Website Design and Development</h6>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <div class="p-4 rounded shadow-sm border h-100 d-flex flex-column align-items-center text-center">
+                    <i class="fa-solid fa-cloud fs-2 text-primary-custom mb-3"></i>
+                    <h6 class="fw-bold">Cloud Computing Services</h6>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <div class="p-4 rounded shadow-sm border h-100 d-flex flex-column align-items-center text-center">
+                    <i class="fa-solid fa-user-tie fs-2 text-primary-custom mb-3"></i>
+                    <h6 class="fw-bold">IT Consulting</h6>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6 mx-auto">
+                <div class="p-4 rounded shadow-sm border h-100 d-flex flex-column align-items-center text-center">
+                    <i class="fa-solid fa-file-signature fs-2 text-primary-custom mb-3"></i>
+                    <h6 class="fw-bold">General Contracts</h6>
                 </div>
             </div>
         </div>

@@ -33,25 +33,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selected_item'])) {
     
     if ($prog_id) {
         // Check if already enrolled in this exact option
-        if (isset($course_id)) {
-            $stmt = $conn->prepare("SELECT id FROM enrollments WHERE user_id = :uid AND programme_id = :pid AND course_id = :cid");
-            $stmt->execute(['uid' => $_SESSION['user_id'], 'pid' => $prog_id, 'cid' => $course_id]);
-        } else {
-            $stmt = $conn->prepare("SELECT id FROM enrollments WHERE user_id = :uid AND programme_id = :pid AND course_id IS NULL");
-            $stmt->execute(['uid' => $_SESSION['user_id'], 'pid' => $prog_id]);
-        }
+        $stmt = $conn->prepare("SELECT id FROM enrollments WHERE user_id = :uid AND programme_id = :pid");
+        $stmt->execute(['uid' => $_SESSION['user_id'], 'pid' => $prog_id]);
         
         if ($stmt->rowCount() > 0) {
-            $error = "You are already enrolled or have a pending enrollment in this programme/course.";
+            $error = "You are already enrolled or have a pending enrollment in this programme.";
         } else {
             // Enroll
-            if (isset($course_id)) {
-                $stmt = $conn->prepare("INSERT INTO enrollments (user_id, programme_id, course_id, status) VALUES (:uid, :pid, :cid, 'pending')");
-                $stmt->execute(['uid' => $_SESSION['user_id'], 'pid' => $prog_id, 'cid' => $course_id]);
-            } else {
-                $stmt = $conn->prepare("INSERT INTO enrollments (user_id, programme_id, status) VALUES (:uid, :pid, 'pending')");
-                $stmt->execute(['uid' => $_SESSION['user_id'], 'pid' => $prog_id]);
-            }
+            $stmt = $conn->prepare("INSERT INTO enrollments (user_id, programme_id, status) VALUES (:uid, :pid, 'pending')");
+            $stmt->execute(['uid' => $_SESSION['user_id'], 'pid' => $prog_id]);
             
             $_SESSION['success_msg'] = "Successfully enrolled! Please complete your payment to access the courses.";
             header("Location: index.php");

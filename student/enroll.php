@@ -75,12 +75,21 @@ require_once __DIR__ . '/../includes/header.php';
             <div class="alert alert-danger shadow-sm"><i class="fa-solid fa-triangle-exclamation me-2"></i> <?= htmlspecialchars($error) ?></div>
         <?php endif; ?>
 
-        <div class="row g-4">
+        <div class="row mb-4">
+            <div class="col-md-6 offset-md-3">
+                <div class="input-group input-group-lg shadow-sm">
+                    <span class="input-group-text bg-white border-end-0"><i class="fa-solid fa-search text-muted"></i></span>
+                    <input type="text" id="courseSearch" class="form-control border-start-0" placeholder="Search for a skill or software (e.g. Adobe, Python)...">
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4" id="courseGrid">
             <?php foreach($allCourses as $course): ?>
                 <?php 
                     $parentProg = $progDict[$course['programme_id']];
                 ?>
-                <div class="col-md-6 col-lg-4">
+                <div class="col-md-6 col-lg-4 course-item" data-name="<?= strtolower(htmlspecialchars($course['name'])) ?>" data-desc="<?= strtolower(htmlspecialchars($course['description'])) ?>">
                     <div class="prog-card p-4 h-100 d-flex flex-column" data-bs-toggle="modal" data-bs-target="#previewModal<?= $course['id'] ?>">
                         <div class="prog-icon"><i class="fa-solid fa-laptop-code"></i></div>
                         <h5 class="fw-bold text-dark mb-2"><?= htmlspecialchars($course['name']) ?></h5>
@@ -141,8 +150,96 @@ require_once __DIR__ . '/../includes/header.php';
                 </div>
             <?php endforeach; ?>
         </div>
+        
+        <div class="d-flex justify-content-center mt-5">
+            <nav>
+                <ul class="pagination pagination-lg" id="paginationControls">
+                    <!-- Pagination injected via JS -->
+                </ul>
+            </nav>
+        </div>
 
     </div>
 </section>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const searchInput = document.getElementById('courseSearch');
+    const courseItems = Array.from(document.querySelectorAll('.course-item'));
+    const paginationControls = document.getElementById('paginationControls');
+    
+    let filteredItems = [...courseItems];
+    let currentPage = 1;
+    const itemsPerPage = 12;
+
+    function renderGrid() {
+        // Hide all
+        courseItems.forEach(item => item.style.display = 'none');
+        
+        // Show only current page of filtered
+        const start = (currentPage - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+        
+        const pageItems = filteredItems.slice(start, end);
+        pageItems.forEach(item => item.style.display = 'block');
+        
+        renderPagination();
+    }
+
+    function renderPagination() {
+        paginationControls.innerHTML = '';
+        const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
+        
+        if (totalPages <= 1) return;
+        
+        // Prev button
+        const prevLi = document.createElement('li');
+        prevLi.className = `page-item ${currentPage === 1 ? 'disabled' : ''}`;
+        prevLi.innerHTML = `<a class="page-link" href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>`;
+        prevLi.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (currentPage > 1) { currentPage--; renderGrid(); }
+        });
+        paginationControls.appendChild(prevLi);
+        
+        // Page numbers
+        for (let i = 1; i <= totalPages; i++) {
+            const li = document.createElement('li');
+            li.className = `page-item ${currentPage === i ? 'active' : ''}`;
+            li.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+            li.addEventListener('click', (e) => {
+                e.preventDefault();
+                currentPage = i;
+                renderGrid();
+            });
+            paginationControls.appendChild(li);
+        }
+        
+        // Next button
+        const nextLi = document.createElement('li');
+        nextLi.className = `page-item ${currentPage === totalPages ? 'disabled' : ''}`;
+        nextLi.innerHTML = `<a class="page-link" href="#" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>`;
+        nextLi.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (currentPage < totalPages) { currentPage++; renderGrid(); }
+        });
+        paginationControls.appendChild(nextLi);
+    }
+
+    searchInput.addEventListener('input', function(e) {
+        const term = e.target.value.toLowerCase();
+        filteredItems = courseItems.filter(item => {
+            const name = item.getAttribute('data-name');
+            const desc = item.getAttribute('data-desc');
+            return name.includes(term) || desc.includes(term);
+        });
+        currentPage = 1;
+        renderGrid();
+    });
+
+    // Initial render
+    renderGrid();
+});
+</script>
 
 <?php require_once __DIR__ . '/../includes/footer.php'; ?>

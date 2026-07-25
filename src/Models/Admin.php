@@ -39,6 +39,18 @@ class Admin {
         return $stmt->fetchAll();
     }
 
+    public function getAllEnrollments() {
+        $query = "SELECT e.id as enrollment_id, u.first_name, u.last_name, u.email, u.reg_number, 
+                         c.name as course_name, c.id as course_id, p.name as prog_name, e.status, e.enrolled_at 
+                  FROM enrollments e 
+                  JOIN users u ON e.user_id = u.id 
+                  LEFT JOIN courses c ON e.course_id = c.id
+                  LEFT JOIN programmes p ON e.programme_id = p.id
+                  ORDER BY e.enrolled_at DESC";
+        $stmt = $this->conn->query($query);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function createFacilitator($data) {
         // Check if email exists
         $stmt = $this->conn->prepare("SELECT id FROM users WHERE email = :email");

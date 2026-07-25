@@ -12,6 +12,7 @@ $adminModel = new Admin();
 $metrics = $adminModel->getMetrics();
 $allUsers = $adminModel->getAllUsers();
 $facilitators = $adminModel->getFacilitators();
+$allEnrollments = $adminModel->getAllEnrollments();
 
 $settingsModel = new Settings();
 $settingsData = $settingsModel->getAllSettings();
@@ -45,6 +46,7 @@ require_once __DIR__ . '/../includes/header.php';
                 <div class="list-group clean-card border-0 shadow-sm" id="adminTabs" role="tablist">
                     <a href="#overview" class="list-group-item list-group-item-action fw-bold <?= $activeTab === 'overview' ? 'active' : 'text-muted' ?>" data-bs-toggle="tab" role="tab" style="<?= $activeTab === 'overview' ? 'background-color: var(--primary-color); border-color: var(--primary-color); color: white !important;' : '' ?>"><i class="fa-solid fa-gauge me-2"></i> Overview</a>
                     <a href="#users" class="list-group-item list-group-item-action fw-bold <?= $activeTab === 'users' ? 'active' : 'text-muted' ?>" data-bs-toggle="tab" role="tab" style="<?= $activeTab === 'users' ? 'background-color: var(--primary-color); border-color: var(--primary-color); color: white !important;' : '' ?>"><i class="fa-solid fa-users me-2"></i> Manage Users</a>
+                    <a href="#enrollments" class="list-group-item list-group-item-action fw-bold <?= $activeTab === 'enrollments' ? 'active' : 'text-muted' ?>" data-bs-toggle="tab" role="tab" style="<?= $activeTab === 'enrollments' ? 'background-color: var(--primary-color); border-color: var(--primary-color); color: white !important;' : '' ?>"><i class="fa-solid fa-graduation-cap me-2"></i> Enrollments</a>
                     <a href="#facilitators" class="list-group-item list-group-item-action fw-bold <?= $activeTab === 'facilitators' ? 'active' : 'text-muted' ?>" data-bs-toggle="tab" role="tab" style="<?= $activeTab === 'facilitators' ? 'background-color: var(--primary-color); border-color: var(--primary-color); color: white !important;' : '' ?>"><i class="fa-solid fa-chalkboard-user me-2"></i> Facilitators</a>
                     <a href="#programmes" class="list-group-item list-group-item-action fw-bold <?= $activeTab === 'programmes' ? 'active' : 'text-muted' ?>" data-bs-toggle="tab" role="tab" style="<?= $activeTab === 'programmes' ? 'background-color: var(--primary-color); border-color: var(--primary-color); color: white !important;' : '' ?>"><i class="fa-solid fa-building-columns me-2"></i> Programmes</a>
                     <a href="#skills" class="list-group-item list-group-item-action fw-bold <?= $activeTab === 'skills' ? 'active' : 'text-muted' ?>" data-bs-toggle="tab" role="tab" style="<?= $activeTab === 'skills' ? 'background-color: var(--primary-color); border-color: var(--primary-color); color: white !important;' : '' ?>"><i class="fa-solid fa-laptop-code me-2"></i> ICT Skills</a>
@@ -107,6 +109,88 @@ require_once __DIR__ . '/../includes/header.php';
                                     </tbody>
                                 </table>
                             </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Enrollments Tab -->
+                    <div class="tab-pane fade <?= $activeTab === 'enrollments' ? 'show active' : '' ?>" id="enrollments" role="tabpanel">
+                        <div class="clean-card p-4 shadow-sm">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <h5 class="fw-bold text-dark mb-0">Student Enrollments</h5>
+                            </div>
+                            
+                            <form action="<?= BASE_URL ?>src/Controllers/AdminController.php?action=bulk_change_course" method="POST" id="bulkCourseForm">
+                                <div class="row align-items-center mb-3 bg-light p-3 rounded mx-0 border">
+                                    <div class="col-md-auto">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="selectAllEnrollments">
+                                            <label class="form-check-label fw-bold" for="selectAllEnrollments">Select All</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md">
+                                        <select name="new_course_id" class="form-select form-select-sm" required>
+                                            <option value="">-- Move Selected to New Course --</option>
+                                            <?php foreach($allCourses as $c): ?>
+                                                <option value="<?= $c['id'] ?>"><?= htmlspecialchars($c['name']) ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-auto text-end">
+                                        <button type="submit" class="btn btn-sm btn-primary-custom" onclick="return confirm('Change course for all selected enrollments?');"><i class="fa-solid fa-right-left me-1"></i> Apply Change</button>
+                                    </div>
+                                </div>
+                            
+                                <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
+                                    <table class="table table-hover align-middle">
+                                        <thead class="table-light sticky-top">
+                                            <tr>
+                                                <th style="width: 40px;"></th>
+                                                <th>Student</th>
+                                                <th>Course / Programme</th>
+                                                <th>Status</th>
+                                                <th>Enrolled Date</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php if(empty($allEnrollments)): ?>
+                                                <tr><td colspan="6" class="text-center text-muted py-4">No enrollments found.</td></tr>
+                                            <?php endif; ?>
+                                            <?php foreach($allEnrollments as $enr): ?>
+                                            <tr>
+                                                <td>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input enrollment-checkbox" type="checkbox" name="enrollment_ids[]" value="<?= $enr['enrollment_id'] ?>">
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="fw-bold text-dark"><?= htmlspecialchars($enr['first_name'] . ' ' . $enr['last_name']) ?></div>
+                                                    <div class="small text-muted"><?= htmlspecialchars($enr['email']) ?></div>
+                                                </td>
+                                                <td>
+                                                    <span class="badge bg-primary-light text-primary-custom border me-1"><i class="fa-solid fa-laptop-code"></i> <?= htmlspecialchars($enr['course_name'] ?? 'None') ?></span>
+                                                    <br><span class="small text-muted"><?= htmlspecialchars($enr['prog_name']) ?></span>
+                                                </td>
+                                                <td>
+                                                    <span class="badge bg-<?= $enr['status'] == 'active' ? 'success' : ($enr['status'] == 'completed' ? 'primary' : 'warning') ?>"><?= ucfirst($enr['status']) ?></span>
+                                                </td>
+                                                <td class="small text-muted"><?= date('M j, Y', strtotime($enr['enrolled_at'])) ?></td>
+                                                <td>
+                                                    <a href="<?= BASE_URL ?>src/Controllers/AdminController.php?action=delete_enrollment&id=<?= $enr['enrollment_id'] ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure you want to completely un-enroll this student from this course?');"><i class="fa-solid fa-user-xmark me-1"></i> Un-enroll</a>
+                                                </td>
+                                            </tr>
+                                            <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </form>
+                            
+                            <script>
+                            document.getElementById('selectAllEnrollments').addEventListener('change', function() {
+                                const checkboxes = document.querySelectorAll('.enrollment-checkbox');
+                                checkboxes.forEach(cb => cb.checked = this.checked);
+                            });
+                            </script>
                         </div>
                     </div>
                     

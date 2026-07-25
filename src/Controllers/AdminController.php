@@ -116,6 +116,35 @@ class AdminController {
         header("Location: " . BASE_URL . "admin/index.php?tab=settings");
         exit();
     }
+
+    public function deleteEnrollment($id) {
+        $stmt = $this->conn->prepare("DELETE FROM enrollments WHERE id = ?");
+        $stmt->execute([$id]);
+        $_SESSION['success_msg'] = "Student un-enrolled successfully.";
+        header("Location: " . BASE_URL . "admin/index.php?tab=enrollments");
+        exit();
+    }
+
+    public function bulkChangeCourse($postData) {
+        if (empty($postData['enrollment_ids']) || empty($postData['new_course_id'])) {
+            $_SESSION['error_msg'] = "Please select at least one enrollment and a new course.";
+            header("Location: " . BASE_URL . "admin/index.php?tab=enrollments");
+            exit();
+        }
+
+        // Get the programme_id for the new course to keep pricing aligned
+        $stmt = $this->conn->prepare("SELECT programme_id FROM courses WHERE id = ?");
+        $stmt->execute([$postData['new_course_id']]);
+        $prog_id = $stmt->fetchColumn();
+
+        $ids = implode(',', array_map('intval', $postData['enrollment_ids']));
+        $stmt = $this->conn->prepare("UPDATE enrollments SET course_id = ?, programme_id = ? WHERE id IN ($ids)");
+        $stmt->execute([$postData['new_course_id'], $prog_id]);
+
+        $_SESSION['success_msg'] = "Successfully updated " . count($postData['enrollment_ids']) . " enrollments to the new course.";
+        header("Location: " . BASE_URL . "admin/index.php?tab=enrollments");
+        exit();
+    }
 }
 
 // Router Logic
@@ -139,6 +168,12 @@ if (isset($_GET['action'])) {
     }
     elseif ($_GET['action'] === 'delete_skill' && isset($_GET['id'])) {
         $controller->deleteSkill($_GET['id']);
+    }
+    elseif ($_GET['action'] === 'delete_enrollment' && isset($_GET['id'])) {
+        $controller->deleteEnrollment($_GET['id']);
+    }
+    elseif ($_GET['action'] === 'bulk_change_course' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+        $controller->bulkChangeCourse($_POST);
     }
     elseif ($_GET['action'] === 'update_settings' && $_SERVER['REQUEST_METHOD'] === 'POST') {
         $controller->updateSettings($_POST, $_FILES);

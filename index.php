@@ -53,35 +53,8 @@ if (isset($_SESSION['user_id'])) {
             <div class="col-lg-6 position-relative z-1 text-center">
                 <div class="position-relative d-inline-block rounded-4 overflow-hidden shadow-lg border border-4 border-white" style="transform: perspective(1000px) rotateY(-5deg); transition: transform 0.5s; width: 100%;">
                     
-                    <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel">
-                        <div class="carousel-inner" style="border-radius: 11px;">
-                            <?php 
-                            $images = [
-                                $settingsData['slider_image_1'] ?? 'assets/images/banner.jpg',
-                                $settingsData['slider_image_2'] ?? '',
-                                $settingsData['slider_image_3'] ?? ''
-                            ];
-                            $activeClass = 'active';
-                            foreach ($images as $img):
-                                if (!empty($img)):
-                            ?>
-                                <div class="carousel-item <?= $activeClass ?>">
-                                    <img src="<?= BASE_URL . htmlspecialchars($img) ?>" class="d-block w-100" alt="Slider Image" style="object-fit: cover; aspect-ratio: 16/9;">
-                                </div>
-                            <?php 
-                                $activeClass = '';
-                                endif;
-                            endforeach; 
-                            ?>
-                        </div>
-                        <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Previous</span>
-                        </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Next</span>
-                        </button>
+                    <div class="rounded-4 overflow-hidden shadow-lg position-relative" style="border: 1px solid rgba(255,255,255,0.2);">
+                        <img src="<?= BASE_URL . htmlspecialchars($settingsData['hero_image'] ?? 'assets/images/hero.jpg') ?>" class="w-100" alt="Metaserve Hero Image" style="object-fit: cover; aspect-ratio: 16/9; min-height: 350px;">
                     </div>
 
                 </div>
@@ -295,23 +268,48 @@ if (isset($_SESSION['user_id'])) {
             <h6 class="text-primary-custom text-uppercase fw-bold mb-2">Our Facilities</h6>
             <h2 class="text-dark fw-bold display-6">State-of-the-Art Learning Environment</h2>
         </div>
-        <style>
-            .bottom-scrolling-wrapper { overflow: hidden; white-space: nowrap; position: relative; width: 100%; padding: 20px 0; }
-            .bottom-scrolling-track { display: inline-block; animation: scrollLeftBottom 30s linear infinite; }
-            .bottom-scrolling-track img { height: 400px; width: auto; display: inline-block; margin-right: 20px; border-radius: 15px; object-fit: cover; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
-            @keyframes scrollLeftBottom { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-        </style>
-        <div class="bottom-scrolling-wrapper">
-            <div class="bottom-scrolling-track">
-                <img src="<?= BASE_URL ?>assets/images/slide1.jpg" alt="Facility 1">
-                <img src="<?= BASE_URL ?>assets/images/slide2.jpg" alt="Facility 2">
-                <img src="<?= BASE_URL ?>assets/images/slide3.jpg" alt="Facility 3">
-                <img src="<?= BASE_URL ?>assets/images/slide4.jpg" alt="Facility 4">
-                <!-- Duplicate for infinite scroll -->
-                <img src="<?= BASE_URL ?>assets/images/slide1.jpg" alt="Facility 1">
-                <img src="<?= BASE_URL ?>assets/images/slide2.jpg" alt="Facility 2">
-                <img src="<?= BASE_URL ?>assets/images/slide3.jpg" alt="Facility 3">
-                <img src="<?= BASE_URL ?>assets/images/slide4.jpg" alt="Facility 4">
+        <div class="row justify-content-center mt-5">
+            <div class="col-lg-10">
+                <div id="facilitiesCarousel" class="carousel slide rounded-4 overflow-hidden shadow-lg" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        <?php 
+                        $images = [
+                            $settingsData['slider_image_1'] ?? 'assets/images/slide1.jpg',
+                            $settingsData['slider_image_2'] ?? 'assets/images/slide2.jpg',
+                            $settingsData['slider_image_3'] ?? 'assets/images/slide3.jpg'
+                        ];
+                        $activeClass = 'active';
+                        $hasImages = false;
+                        
+                        foreach ($images as $img):
+                            if (!empty($img)):
+                                $hasImages = true;
+                        ?>
+                            <div class="carousel-item <?= $activeClass ?>">
+                                <img src="<?= BASE_URL . htmlspecialchars($img) ?>" class="d-block w-100" alt="Facility Image" style="object-fit: cover; aspect-ratio: 16/9; max-height: 600px;">
+                            </div>
+                        <?php 
+                            $activeClass = '';
+                            endif;
+                        endforeach; 
+                        
+                        // Fallback if no images
+                        if (!$hasImages):
+                        ?>
+                            <div class="carousel-item active">
+                                <img src="<?= BASE_URL ?>assets/images/slide1.jpg" class="d-block w-100" alt="Facility Image" style="object-fit: cover; aspect-ratio: 16/9; max-height: 600px;">
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#facilitiesCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#facilitiesCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
             </div>
         </div>
     </div>

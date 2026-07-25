@@ -33,7 +33,8 @@ try {
     (4, 'contact_admin_phone', '09055875069, 0806 486 6016'),
     (5, 'contact_tech_phone', '08082768855'),
     (6, 'paystack_public_key', 'pk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'),
-    (7, 'paystack_secret_key', 'sk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');";
+    (7, 'paystack_secret_key', 'sk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'),
+    (8, 'hero_image', 'assets/images/hero.jpg');";
     $conn->exec($sqlInsertSettings);
     echo "✓ Settings table verified and populated.\n";
 

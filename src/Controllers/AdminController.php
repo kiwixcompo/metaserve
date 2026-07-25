@@ -97,7 +97,7 @@ class AdminController {
             mkdir($uploadDir, 0777, true);
         }
 
-        $imageFields = ['slider_image_1', 'slider_image_2', 'slider_image_3'];
+        $imageFields = ['hero_image', 'slider_image_1', 'slider_image_2', 'slider_image_3'];
         foreach ($imageFields as $field) {
             if (isset($fileData[$field]) && $fileData[$field]['error'] === UPLOAD_ERR_OK) {
                 $fileTmpPath = $fileData[$field]['tmp_name'];

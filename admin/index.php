@@ -305,7 +305,16 @@ require_once __DIR__ . '/../includes/header.php';
                         <div class="clean-card p-4 shadow-sm">
                             <h5 class="fw-bold text-dark mb-4">System Settings</h5>
                             <form action="<?= BASE_URL ?>src/Controllers/AdminController.php?action=update_settings" method="POST" enctype="multipart/form-data">
-                                <h6 class="fw-bold mt-4 mb-3">Slider Images (Leave blank to keep current)</h6>
+                                <h6 class="fw-bold mt-4 mb-3">Homepage Images (Leave blank to keep current)</h6>
+                                <div class="mb-3">
+                                    <label class="form-label text-muted small fw-bold">Hero Image (Top Section)</label>
+                                    <input type="file" name="hero_image" class="form-control clean-form-control" accept="image/*">
+                                    <?php if(!empty($settingsData['hero_image'])): ?>
+                                        <div class="mt-2"><img src="<?= BASE_URL . $settingsData['hero_image'] ?>" style="height: 50px; border-radius: 5px;"></div>
+                                    <?php endif; ?>
+                                </div>
+                                
+                                <h6 class="fw-bold mt-4 mb-3">Slider Images (Bottom Section)</h6>
                                 <div class="mb-3">
                                     <label class="form-label text-muted small fw-bold">Slider Image 1</label>
                                     <input type="file" name="slider_image_1" class="form-control clean-form-control" accept="image/*">

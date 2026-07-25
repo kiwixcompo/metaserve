@@ -20,7 +20,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'bypass_payment') {
 }
 
 // Fetch Enrollments
-$stmt = $conn->prepare("SELECT e.*, p.name as prog_name FROM enrollments e JOIN programmes p ON e.programme_id = p.id WHERE e.user_id = :uid");
+$stmt = $conn->prepare("SELECT e.*, p.name as prog_name, c.name as explicit_course_name FROM enrollments e JOIN programmes p ON e.programme_id = p.id LEFT JOIN courses c ON e.course_id = c.id WHERE e.user_id = :uid");
 $stmt->execute(['uid' => $_SESSION['user_id']]);
 $enrollments = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -95,7 +95,7 @@ require_once __DIR__ . '/../includes/header.php';
                                     <li class="list-group-item px-0 py-3 d-flex align-items-center border-0 border-bottom border-light">
                                         <div class="rounded-circle bg-success-subtle text-success p-2 me-3"><i class="fa-solid fa-check"></i></div>
                                         <div class="flex-grow-1">
-                                            <h6 class="mb-0 fw-bold text-dark"><?= htmlspecialchars($active['course_name'] ?? $active['prog_name']) ?></h6>
+                                            <h6 class="mb-0 fw-bold text-dark"><?= htmlspecialchars($active['explicit_course_name'] ?? $active['prog_name']) ?></h6>
                                             <small class="text-muted">Enrolled: <?= date('M j, Y', strtotime($active['enrolled_at'])) ?></small>
                                         </div>
                                         <a href="modules.php?id=<?= $active['id'] ?>" class="btn btn-sm btn-light">View Modules & Grades</a>

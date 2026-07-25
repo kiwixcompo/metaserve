@@ -97,8 +97,8 @@ require_once __DIR__ . '/../includes/header.php';
                             <?= htmlspecialchars($course['description']) ?>
                         </p>
                         
-                        <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
-                            <span class="badge bg-light text-dark"><i class="fa-solid fa-layer-group me-1"></i> <?= htmlspecialchars($parentProg['name']) ?></span>
+                        <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top" style="min-width: 0;">
+                            <span class="badge bg-light text-dark text-truncate w-100 text-start" title="<?= htmlspecialchars($parentProg['name']) ?>"><i class="fa-solid fa-layer-group me-1"></i> <?= htmlspecialchars($parentProg['name']) ?></span>
                         </div>
                         
                         <button class="btn btn-primary-custom w-100 mt-3 fw-bold">Preview & Enroll</button>

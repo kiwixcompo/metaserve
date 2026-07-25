@@ -7,7 +7,7 @@ $settingsData = $settingsModel->getAllSettings();
 
 $enrollLink = BASE_URL . "register.php";
 if (isset($_SESSION['user_id'])) {
-    if (in_array($_SESSION['role_id'], [5, 6])) {
+    if (isset($_SESSION['role_id']) && in_array($_SESSION['role_id'], [5, 6])) {
         $enrollLink = BASE_URL . "student/enroll.php";
     } else {
         $enrollLink = BASE_URL . "login.php"; // Redirects to correct dashboard via AuthController logic or they can just use the navbar
@@ -30,7 +30,7 @@ if (isset($_SESSION['user_id'])) {
                     <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center justify-content-lg-start">
                         <?php 
                             $dashLink = BASE_URL . 'student/index.php';
-                            if ($_SESSION['role_id'] == 1) $dashLink = BASE_URL . 'admin/index.php';
+                            if (isset($_SESSION['role_id']) && $_SESSION['role_id'] == 1) $dashLink = BASE_URL . 'admin/index.php';
                         ?>
                         <a href="<?= $dashLink ?>" class="btn btn-primary-custom btn-lg px-5 py-3 shadow-sm d-flex align-items-center justify-content-center">Go to Dashboard <i class="fa-solid fa-arrow-right ms-2"></i></a>
                         <a href="<?= BASE_URL ?>courses.php" class="btn btn-outline-secondary btn-lg px-5 py-3">Explore More Courses</a>

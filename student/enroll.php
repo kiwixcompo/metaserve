@@ -16,6 +16,7 @@ $progDict = array_column($programmes, null, 'id');
 $stmt = $conn->query("SELECT c.* FROM courses c JOIN programmes p ON c.programme_id = p.id WHERE p.is_active = 1 ORDER BY c.name ASC");
 $allCourses = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selected_item'])) {
     $item = $_POST['selected_item'];
     $prog_id = null;
     $course_id = null;

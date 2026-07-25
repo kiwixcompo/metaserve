@@ -13,10 +13,9 @@ $conn = $db->getConnection();
 
 // Validate enrollment belongs to student
 $stmt = $conn->prepare("
-    SELECT e.*, p.name as prog_name, c.name as explicit_course_name 
+    SELECT e.*, p.name as prog_name 
     FROM enrollments e 
     JOIN programmes p ON e.programme_id = p.id 
-    LEFT JOIN courses c ON e.course_id = c.id
     WHERE e.id = ? AND e.user_id = ?
 ");
 $stmt->execute([$enrollment_id, $_SESSION['user_id']]);
@@ -28,20 +27,12 @@ if (!$enrollment) {
     exit();
 }
 
-$enrollmentName = $enrollment['explicit_course_name'] ?? $enrollment['prog_name'];
+$enrollmentName = $enrollment['prog_name'];
 
-// Fetch the courses applicable to this enrollment
-if ($enrollment['course_id']) {
-    // Single course
-    $cStmt = $conn->prepare("SELECT id as course_id, name as course_name, course_code FROM courses WHERE id = ?");
-    $cStmt->execute([$enrollment['course_id']]);
-    $courses = $cStmt->fetchAll(PDO::FETCH_ASSOC);
-} else {
-    // Entire programme
-    $cStmt = $conn->prepare("SELECT id as course_id, name as course_name, course_code FROM courses WHERE programme_id = ? ORDER BY name ASC");
-    $cStmt->execute([$enrollment['programme_id']]);
-    $courses = $cStmt->fetchAll(PDO::FETCH_ASSOC);
-}
+// Fetch the courses applicable to this enrollment (Entire programme)
+$cStmt = $conn->prepare("SELECT id as course_id, name as course_name, course_code FROM courses WHERE programme_id = ? ORDER BY name ASC");
+$cStmt->execute([$enrollment['programme_id']]);
+$courses = $cStmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Fetch assessments for this enrollment
 $aStmt = $conn->prepare("SELECT course_id, score, remarks, graded_at, f.first_name as fac_first, f.last_name as fac_last 

@@ -26,8 +26,7 @@ class FacilitatorModel {
         if (!$prog_id) return [];
 
         // Fetch students
-        // Students are taking this course if they are enrolled in the course explicitly (course_id matches)
-        // OR if they are enrolled in the programme (course_id IS NULL)
+        // Students are taking this course if they are enrolled in the programme it belongs to
         $query = "
             SELECT 
                 u.id as user_id, 
@@ -42,13 +41,13 @@ class FacilitatorModel {
             FROM enrollments e
             JOIN users u ON e.user_id = u.id
             LEFT JOIN assessments a ON (a.enrollment_id = e.id AND a.course_id = ?)
-            WHERE e.course_id = ?
+            WHERE e.programme_id = ?
               AND e.status IN ('active', 'completed')
             ORDER BY u.last_name ASC
         ";
 
         $stmt = $this->conn->prepare($query);
-        $stmt->execute([$course_id, $course_id]);
+        $stmt->execute([$course_id, $prog_id]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 

@@ -37,12 +37,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selected_item'])) {
         if ($stmt->rowCount() > 0) {
             $error = "You are already enrolled or have a pending enrollment in this course.";
         } else {
-            // Enroll
-            $stmt = $conn->prepare("INSERT INTO enrollments (user_id, programme_id, course_id, status) VALUES (:uid, :pid, :cid, 'pending')");
+            // Enroll as pending
+            $stmt = $conn->prepare("INSERT INTO enrollments (user_id, programme_id, course_id, status, payment_status, amount_paid, form_fee_paid) VALUES (:uid, :pid, :cid, 'pending', 'pending', 0, 0)");
             $stmt->execute(['uid' => $_SESSION['user_id'], 'pid' => $prog_id, 'cid' => $course_id]);
             
-            $_SESSION['success_msg'] = "Successfully enrolled in the course! Please complete your payment to access the modules.";
-            header("Location: index.php");
+            $enrollment_id = $conn->lastInsertId();
+            
+            // Redirect to checkout
+            header("Location: checkout.php?id=" . $enrollment_id);
             exit();
         }
     } else {
@@ -85,10 +87,27 @@ require_once __DIR__ . '/../includes/header.php';
         </div>
 
         <div class="row g-4" id="courseGrid">
-            <?php foreach($allCourses as $course): ?>
-                <?php 
+            <?php 
+            // Get User info for pricing
+            $stmt = $conn->prepare("SELECT type, form_purchased FROM users WHERE id = ?");
+            $stmt->execute([$_SESSION['user_id']]);
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+            $user_type = $user['type'];
+            $form_purchased = $user['form_purchased'];
+
+            foreach($allCourses as $course): 
                     $parentProg = $progDict[$course['programme_id']];
-                ?>
+                    
+                    // Dynamic Pricing Logic
+                    $prog_fee = 0;
+                    if ($course['programme_id'] == 1) { // Basic
+                        $prog_fee = ($user_type === 'tsu_student') ? 20000 : 50000;
+                    } else { // Professional
+                        $prog_fee = ($user_type === 'tsu_student') ? 40000 : 100000;
+                    }
+                    $admin_charge = ($form_purchased) ? 0 : 2000;
+                    $total_to_pay = $prog_fee + $admin_charge;
+            ?>
                 <div class="col-md-6 col-lg-4 course-item" data-name="<?= strtolower(htmlspecialchars($course['name'])) ?>" data-desc="<?= strtolower(htmlspecialchars($course['description'])) ?>">
                     <div class="prog-card p-4 h-100 d-flex flex-column" data-bs-toggle="modal" data-bs-target="#previewModal<?= $course['id'] ?>">
                         <div class="prog-icon"><i class="fa-solid fa-laptop-code"></i></div>
@@ -123,8 +142,8 @@ require_once __DIR__ . '/../includes/header.php';
                         <div class="d-flex gap-3 mb-4">
                             <div class="bg-light rounded p-3 text-center flex-fill border">
                                 <i class="fa-solid fa-coins text-secondary-custom fs-4 mb-2 d-block"></i>
-                                <span class="fw-bold fs-5 text-dark">&#8358;<?= number_format($parentProg['cost'], 0) ?></span>
-                                <div class="small text-muted">Enrollment Fee</div>
+                                <span class="fw-bold fs-5 text-dark">&#8358;<?= number_format($total_to_pay, 0) ?></span>
+                                <div class="small text-muted">Total Fee</div>
                             </div>
                             <div class="bg-light rounded p-3 text-center flex-fill border">
                                 <i class="fa-solid fa-calendar-week text-primary-custom fs-4 mb-2 d-block"></i>
@@ -142,7 +161,7 @@ require_once __DIR__ . '/../includes/header.php';
                         <form method="POST" action="enroll.php" class="w-100 d-flex gap-2">
                             <input type="hidden" name="selected_item" value="course_<?= $course['id'] ?>">
                             <button type="button" class="btn btn-outline-secondary px-4 py-2" data-bs-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn btn-primary-custom flex-grow-1 py-2 fw-bold fs-5">Confirm Enrollment <i class="fa-solid fa-arrow-right ms-2"></i></button>
+                            <button type="submit" class="btn btn-primary-custom flex-grow-1 py-2 fw-bold fs-5">Proceed to Payment <i class="fa-solid fa-arrow-right ms-2"></i></button>
                         </form>
                       </div>
                     </div>

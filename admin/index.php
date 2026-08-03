@@ -59,20 +59,81 @@ require_once __DIR__ . '/../includes/header.php';
                     
                     <!-- Overview Tab -->
                     <div class="tab-pane fade <?= $activeTab === 'overview' ? 'show active' : '' ?>" id="overview" role="tabpanel">
-                        <div class="row gy-4">
-                            <div class="col-md-6">
-                                <div class="clean-card p-4 border-start border-4 border-primary shadow-sm h-100">
-                                    <h6 class="text-muted mb-2 text-uppercase fw-bold">Total System Users</h6>
-                                    <h2 class="fw-bold text-dark mb-0"><?= number_format($metrics['total_users']) ?></h2>
+                        
+                        <h5 class="fw-bold text-dark mb-3 border-bottom pb-2">Registration Statistics</h5>
+                        <div class="row gy-3 mb-4">
+                            <div class="col-md-4">
+                                <div class="clean-card p-3 border-start border-4 border-primary shadow-sm h-100">
+                                    <h6 class="text-muted mb-1 small text-uppercase fw-bold">Total Candidates</h6>
+                                    <h3 class="fw-bold text-dark mb-0"><?= number_format($metrics['total_candidates'] ?? 0) ?></h3>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="clean-card p-3 border-start border-4 border-info shadow-sm h-100">
+                                    <h6 class="text-muted mb-1 small text-uppercase fw-bold">TSU Students</h6>
+                                    <h3 class="fw-bold text-dark mb-0"><?= number_format($metrics['tsu_students'] ?? 0) ?></h3>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="clean-card p-3 border-start border-4 border-secondary shadow-sm h-100">
+                                    <h6 class="text-muted mb-1 small text-uppercase fw-bold">External Candidates</h6>
+                                    <h3 class="fw-bold text-dark mb-0"><?= number_format($metrics['external_candidates'] ?? 0) ?></h3>
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="clean-card p-4 border-start border-4 shadow-sm h-100" style="border-color: var(--secondary-color) !important;">
-                                    <h6 class="text-muted mb-2 text-uppercase fw-bold">Active Facilitators</h6>
-                                    <h2 class="fw-bold text-dark mb-0"><?= number_format($metrics['active_facilitators']) ?></h2>
+                                <div class="clean-card p-3 border-start border-4 shadow-sm h-100" style="border-color: #198754 !important;">
+                                    <h6 class="text-muted mb-1 small text-uppercase fw-bold">Online Registrations</h6>
+                                    <h3 class="fw-bold text-dark mb-0"><?= number_format($metrics['online_regs'] ?? 0) ?></h3>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="clean-card p-3 border-start border-4 shadow-sm h-100" style="border-color: #ffc107 !important;">
+                                    <h6 class="text-muted mb-1 small text-uppercase fw-bold">Physical Form Registrations</h6>
+                                    <h3 class="fw-bold text-dark mb-0"><?= number_format($metrics['physical_regs'] ?? 0) ?></h3>
                                 </div>
                             </div>
                         </div>
+
+                        <h5 class="fw-bold text-dark mb-3 border-bottom pb-2">Revenue Breakdown</h5>
+                        <div class="row gy-3 mb-4">
+                            <div class="col-md-4">
+                                <div class="clean-card p-3 bg-light border-0 shadow-sm h-100">
+                                    <h6 class="text-muted mb-1 small fw-bold">Form Sales (Admin Charge)</h6>
+                                    <h4 class="fw-bold text-primary-custom mb-0">&#8358;<?= number_format($metrics['form_sales'] ?? 0, 2) ?></h4>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="clean-card p-3 bg-light border-0 shadow-sm h-100">
+                                    <h6 class="text-muted mb-1 small fw-bold">Basic (TSU)</h6>
+                                    <h4 class="fw-bold text-dark mb-0">&#8358;<?= number_format($metrics['basic_tsu'] ?? 0, 2) ?></h4>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="clean-card p-3 bg-light border-0 shadow-sm h-100">
+                                    <h6 class="text-muted mb-1 small fw-bold">Basic (External)</h6>
+                                    <h4 class="fw-bold text-dark mb-0">&#8358;<?= number_format($metrics['basic_external'] ?? 0, 2) ?></h4>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="clean-card p-3 bg-light border-0 shadow-sm h-100">
+                                    <h6 class="text-muted mb-1 small fw-bold">Professional (TSU)</h6>
+                                    <h4 class="fw-bold text-dark mb-0">&#8358;<?= number_format($metrics['prof_tsu'] ?? 0, 2) ?></h4>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="clean-card p-3 bg-light border-0 shadow-sm h-100">
+                                    <h6 class="text-muted mb-1 small fw-bold">Professional (External)</h6>
+                                    <h4 class="fw-bold text-dark mb-0">&#8358;<?= number_format($metrics['prof_external'] ?? 0, 2) ?></h4>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="clean-card p-3 border-0 shadow-sm h-100" style="background: rgba(30, 86, 49, 0.1);">
+                                    <h6 class="text-primary-custom mb-1 small text-uppercase fw-bold">Total Revenue</h6>
+                                    <h3 class="fw-bold text-primary-custom mb-0">&#8358;<?= number_format($metrics['total_revenue'] ?? 0, 2) ?></h3>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                     
                     <!-- Users Tab -->

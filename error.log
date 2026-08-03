@@ -34,3 +34,17 @@
 [22-Jul-2026 17:04:35 UTC] PHP Warning:  Undefined array key "role_id" in C:\wamp64\www\metaserve\index.php on line 33
 [22-Jul-2026 17:04:35 UTC] PHP Stack trace:
 [22-Jul-2026 17:04:35 UTC] PHP   1. {main}() C:\wamp64\www\metaserve\index.php:0
+[03-Aug-2026 13:04:33 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'registration_method' in 'where clause' in C:\wamp64\www\metaserve\src\Models\Admin.php:18
+Stack trace:
+#0 C:\wamp64\www\metaserve\src\Models\Admin.php(18): PDO->query('SELECT COUNT(*)...')
+#1 C:\wamp64\www\metaserve\admin\index.php(12): Admin->getMetrics()
+#2 {main}
+  thrown in C:\wamp64\www\metaserve\src\Models\Admin.php on line 18
+[03-Aug-2026 13:26:40 UTC] PHP Warning:  Trying to access array offset on null in C:\wamp64\www\metaserve\src\Controllers\PaymentController.php on line 42
+[03-Aug-2026 13:26:40 UTC] PHP Stack trace:
+[03-Aug-2026 13:26:40 UTC] PHP   1. {main}() C:\wamp64\www\metaserve\payment.php:0
+[03-Aug-2026 13:26:40 UTC] PHP   2. PaymentController->initializePaystack($email = 'student@metaserve.com', $amount = 20000, $enrollment_id = 6, $user_id = 6) C:\wamp64\www\metaserve\payment.php:53
+[03-Aug-2026 13:26:40 UTC] PHP Warning:  Trying to access array offset on null in C:\wamp64\www\metaserve\src\Controllers\PaymentController.php on line 56
+[03-Aug-2026 13:26:40 UTC] PHP Stack trace:
+[03-Aug-2026 13:26:40 UTC] PHP   1. {main}() C:\wamp64\www\metaserve\payment.php:0
+[03-Aug-2026 13:26:40 UTC] PHP   2. PaymentController->initializePaystack($email = 'student@metaserve.com', $amount = 20000, $enrollment_id = 6, $user_id = 6) C:\wamp64\www\metaserve\payment.php:53

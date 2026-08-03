@@ -10,16 +10,26 @@ class Admin {
     }
 
     public function getMetrics() {
-        $metrics = [
-            'total_users' => 0,
-            'active_facilitators' => 0
-        ];
+        $metrics = [];
         
-        $stmt = $this->conn->query("SELECT COUNT(*) FROM users");
-        $metrics['total_users'] = $stmt->fetchColumn();
-
-        $stmt = $this->conn->query("SELECT COUNT(*) FROM users WHERE role_id = 4");
-        $metrics['active_facilitators'] = $stmt->fetchColumn();
+        $metrics['total_candidates'] = $this->conn->query("SELECT COUNT(*) FROM users WHERE role_id IN (5,6)")->fetchColumn();
+        $metrics['tsu_students'] = $this->conn->query("SELECT COUNT(*) FROM users WHERE role_id = 5")->fetchColumn();
+        $metrics['external_candidates'] = $this->conn->query("SELECT COUNT(*) FROM users WHERE role_id = 6")->fetchColumn();
+        $metrics['online_regs'] = $this->conn->query("SELECT COUNT(*) FROM users WHERE registration_method = 'ONLINE' AND role_id IN (5,6)")->fetchColumn();
+        $metrics['physical_regs'] = $this->conn->query("SELECT COUNT(*) FROM users WHERE registration_method = 'PHYSICAL' AND role_id IN (5,6)")->fetchColumn();
+        
+        // Revenue
+        $metrics['form_sales'] = $this->conn->query("SELECT COALESCE(SUM(form_fee_paid), 0) FROM enrollments WHERE payment_status = 'paid'")->fetchColumn();
+        
+        // Basic Programme (id=1)
+        $metrics['basic_tsu'] = $this->conn->query("SELECT COALESCE(SUM(e.amount_paid), 0) FROM enrollments e JOIN users u ON e.user_id = u.id WHERE e.programme_id = 1 AND u.type = 'tsu_student' AND e.payment_status = 'paid'")->fetchColumn();
+        $metrics['basic_external'] = $this->conn->query("SELECT COALESCE(SUM(e.amount_paid), 0) FROM enrollments e JOIN users u ON e.user_id = u.id WHERE e.programme_id = 1 AND u.type = 'external' AND e.payment_status = 'paid'")->fetchColumn();
+        
+        // Professional Programme (id=2)
+        $metrics['prof_tsu'] = $this->conn->query("SELECT COALESCE(SUM(e.amount_paid), 0) FROM enrollments e JOIN users u ON e.user_id = u.id WHERE e.programme_id = 2 AND u.type = 'tsu_student' AND e.payment_status = 'paid'")->fetchColumn();
+        $metrics['prof_external'] = $this->conn->query("SELECT COALESCE(SUM(e.amount_paid), 0) FROM enrollments e JOIN users u ON e.user_id = u.id WHERE e.programme_id = 2 AND u.type = 'external' AND e.payment_status = 'paid'")->fetchColumn();
+        
+        $metrics['total_revenue'] = $metrics['form_sales'] + $metrics['basic_tsu'] + $metrics['basic_external'] + $metrics['prof_tsu'] + $metrics['prof_external'];
 
         return $metrics;
     }

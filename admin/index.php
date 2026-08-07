@@ -165,6 +165,17 @@ require_once __DIR__ . '/../includes/header.php';
                                         <option value="University Management">University Management</option>
                                     </select>
                                 </div>
+                                <div class="col-md-4 text-end d-flex align-items-end justify-content-end">
+                                    <div class="dropdown">
+                                        <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                            <i class="fa-solid fa-download me-1"></i> Export Data
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="#" onclick="exportUsersToCSV(event)"><i class="fa-solid fa-file-excel text-success me-2"></i> Excel (CSV)</a></li>
+                                            <li><a class="dropdown-item" href="#" onclick="exportUsersToPDF(event)"><i class="fa-solid fa-file-pdf text-danger me-2"></i> PDF Document</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="table-responsive">
@@ -627,6 +638,87 @@ function filterUsers() {
 
 document.getElementById('userSearchInput')?.addEventListener('input', filterUsers);
 document.getElementById('userRoleFilter')?.addEventListener('change', filterUsers);
+
+// Export to CSV
+function exportUsersToCSV(e) {
+    e.preventDefault();
+    let csv = [];
+    const rows = document.querySelectorAll('#usersTable tr');
+    
+    // Header
+    const cols = rows[0].querySelectorAll('th');
+    let rowData = [];
+    for (let j = 0; j < cols.length - 1; j++) { // Exclude 'Action' column
+        rowData.push('"' + cols[j].innerText.replace(/"/g, '""') + '"');
+    }
+    csv.push(rowData.join(','));
+    
+    // Data rows
+    for (let i = 1; i < rows.length; i++) {
+        if (rows[i].style.display !== 'none') {
+            const tds = rows[i].querySelectorAll('td');
+            let tData = [];
+            for (let j = 0; j < tds.length - 1; j++) { // Exclude 'Action' column
+                tData.push('"' + tds[j].innerText.replace(/"/g, '""') + '"');
+            }
+            csv.push(tData.join(','));
+        }
+    }
+    
+    // Download
+    const csvFile = new Blob([csv.join('\n')], {type: 'text/csv'});
+    const downloadLink = document.createElement('a');
+    downloadLink.download = 'metaserve_users.csv';
+    downloadLink.href = window.URL.createObjectURL(csvFile);
+    downloadLink.style.display = 'none';
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+}
+
+// Export to PDF
+function exportUsersToPDF(e) {
+    e.preventDefault();
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    
+    doc.text("Metaserve Users Report", 14, 15);
+    
+    const rows = document.querySelectorAll('#usersTable tr');
+    let head = [];
+    let body = [];
+    
+    // Header
+    const cols = rows[0].querySelectorAll('th');
+    for (let j = 0; j < cols.length - 1; j++) {
+        head.push(cols[j].innerText);
+    }
+    
+    // Data rows
+    for (let i = 1; i < rows.length; i++) {
+        if (rows[i].style.display !== 'none') {
+            const tds = rows[i].querySelectorAll('td');
+            let tData = [];
+            for (let j = 0; j < tds.length - 1; j++) {
+                tData.push(tds[j].innerText);
+            }
+            body.push(tData);
+        }
+    }
+    
+    doc.autoTable({
+        head: [head],
+        body: body,
+        startY: 20,
+        theme: 'striped',
+        styles: { fontSize: 9 }
+    });
+    
+    doc.save('metaserve_users.pdf');
+}
 </script>
+
+<!-- PDF Export Libraries -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.1/jspdf.plugin.autotable.min.js"></script>
 
 <?php require_once __DIR__ . '/../includes/footer.php'; ?>

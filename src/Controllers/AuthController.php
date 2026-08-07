@@ -60,16 +60,20 @@ class AuthController {
             return ['status' => 'error', 'errors' => $errors];
         }
 
+        // Generate verification token
+        $postData['verification_token'] = bin2hex(random_bytes(16));
         $postData['role_id'] = $role_id;
         
         // 4. Register the user
         $userId = $this->userModel->register($postData);
 
         if ($userId) {
-            // Auto login after successful registration
-            $userData = $this->userModel->login($postData['email'], $postData['password']);
-            $this->setSession($userData);
-            return ['status' => 'success', 'redirect' => $this->getDashboardRoute($userData['role_id'])];
+            // Send Verification Email
+            require_once __DIR__ . '/../Models/EmailService.php';
+            $emailService = new \App\Models\EmailService();
+            $emailService->sendVerificationEmail($postData['email'], $postData['first_name'], $postData['verification_token']);
+
+            return ['status' => 'success', 'redirect' => BASE_URL . 'register.php?success=registered'];
         } else {
             return ['status' => 'error', 'errors' => ['Failed to register. Please try again.']];
         }
@@ -83,6 +87,11 @@ class AuthController {
         $userData = $this->userModel->login($email, $password);
 
         if ($userData) {
+            // Check if email is verified
+            if (isset($userData['email_verified']) && $userData['email_verified'] == 0) {
+                return ['status' => 'error', 'message' => 'Please verify your email address before logging in. Check your inbox for the verification link.'];
+            }
+
             $this->setSession($userData);
             return ['status' => 'success', 'redirect' => $this->getDashboardRoute($userData['role_id'])];
         } else {

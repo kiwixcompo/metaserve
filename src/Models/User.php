@@ -35,10 +35,10 @@ class User {
         $query = "INSERT INTO " . $this->table . " 
                   (role_id, first_name, last_name, email, password_hash, phone, type, reg_number,
                    dob, gender, nationality, state_of_origin, lga, alt_phone, department_id, level,
-                   highest_qualification, occupation, faculty_interest, how_did_you_hear, why_join, registration_id) 
+                   highest_qualification, occupation, faculty_interest, how_did_you_hear, why_join, registration_id, verification_token) 
                   VALUES (:role_id, :first_name, :last_name, :email, :password_hash, :phone, :type, :reg_number,
                    :dob, :gender, :nationality, :state_of_origin, :lga, :alt_phone, :department_id, :level,
-                   :highest_qualification, :occupation, :faculty_interest, :how_did_you_hear, :why_join, :registration_id)";
+                   :highest_qualification, :occupation, :faculty_interest, :how_did_you_hear, :why_join, :registration_id, :verification_token)";
         
         $stmt = $this->conn->prepare($query);
 
@@ -68,6 +68,7 @@ class User {
         $stmt->bindValue(':how_did_you_hear', htmlspecialchars(strip_tags($data['how_did_you_hear'] ?? '')));
         $stmt->bindValue(':why_join', htmlspecialchars(strip_tags($data['why_join'] ?? '')));
         $stmt->bindValue(':registration_id', $data['registration_id'] ?? null);
+        $stmt->bindValue(':verification_token', $data['verification_token'] ?? null);
 
         if($stmt->execute()) {
             return $this->conn->lastInsertId();
@@ -90,5 +91,23 @@ class User {
             }
         }
         return false; // Failure
+    }
+
+    public function verifyEmail($token) {
+        $query = "SELECT id, email, first_name FROM " . $this->table . " WHERE verification_token = :token LIMIT 1";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':token', $token);
+        $stmt->execute();
+
+        if ($stmt->rowCount() > 0) {
+            $user = $stmt->fetch();
+            // Update user to verified and clear token
+            $updateQuery = "UPDATE " . $this->table . " SET email_verified = 1, verification_token = NULL WHERE id = :id";
+            $updateStmt = $this->conn->prepare($updateQuery);
+            $updateStmt->bindParam(':id', $user['id']);
+            $updateStmt->execute();
+            return $user;
+        }
+        return false;
     }
 }

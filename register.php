@@ -74,6 +74,16 @@ require_once __DIR__ . '/includes/header.php';
                         <p class="text-muted small mt-2">A collaborative initiative between Metaserve Info Tech Ltd and Taraba State University, Jalingo.</p>
                     </div>
 
+                    <?php if (isset($_GET['success']) && $_GET['success'] === 'registered'): ?>
+                        <div class="alert alert-success border-0 p-5 mb-4 shadow-sm text-center" style="background: #e6f4ea; color: #1e5631; border-radius: 12px;">
+                            <i class="fa-solid fa-envelope-circle-check" style="font-size: 3rem; margin-bottom: 15px;"></i>
+                            <h4 class="fw-bold mb-3">Registration Successful!</h4>
+                            <p class="mb-0 fs-5">We've sent a verification link to your email address.</p>
+                            <p class="text-muted mt-2">Please check your inbox (and spam folder) and click the link to verify your account and gain access to your dashboard.</p>
+                            <a href="<?= BASE_URL ?>login.php" class="btn btn-primary-custom mt-4 px-4 py-2">Go to Login</a>
+                        </div>
+                    <?php else: ?>
+
                     <?php if (!empty($errors)): ?>
                         <div class="alert alert-danger border-0 p-4 mb-4 shadow-sm" style="background: #fee2e2; color: #991b1b; border-radius: 12px;">
                             <h6 class="fw-bold mb-2">Registration Failed</h6>
@@ -642,5 +652,6 @@ require_once __DIR__ . '/includes/header.php';
         document.getElementById('registerForm').submit();
     }
 </script>
+<?php endif; ?>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>

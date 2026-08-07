@@ -369,33 +369,33 @@ require_once __DIR__ . '/../includes/header.php';
                                 <h6 class="fw-bold mt-4 mb-3">Homepage Images (Leave blank to keep current)</h6>
                                 <div class="mb-3">
                                     <label class="form-label text-muted small fw-bold">Hero Image (Top Section)</label>
-                                    <input type="file" name="hero_image" class="form-control clean-form-control" accept="image/*">
-                                    <?php if(!empty($settingsData['hero_image'])): ?>
-                                        <div class="mt-2"><img src="<?= BASE_URL . $settingsData['hero_image'] ?>" style="height: 50px; border-radius: 5px;"></div>
-                                    <?php endif; ?>
+                                    <input type="file" name="hero_image" class="form-control clean-form-control img-upload-input" accept="image/*" onchange="previewImage(this)">
+                                    <div class="mt-2 preview-wrapper" style="<?= empty($settingsData['hero_image']) ? 'display: none;' : '' ?>">
+                                        <img src="<?= empty($settingsData['hero_image']) ? '' : BASE_URL . $settingsData['hero_image'] ?>" style="height: 50px; border-radius: 5px; cursor: zoom-in;" onclick="openImageModal(this.src)">
+                                    </div>
                                 </div>
                                 
                                 <h6 class="fw-bold mt-4 mb-3">Slider Images (Bottom Section)</h6>
                                 <div class="mb-3">
                                     <label class="form-label text-muted small fw-bold">Slider Image 1</label>
-                                    <input type="file" name="slider_image_1" class="form-control clean-form-control" accept="image/*">
-                                    <?php if(!empty($settingsData['slider_image_1'])): ?>
-                                        <div class="mt-2"><img src="<?= BASE_URL . $settingsData['slider_image_1'] ?>" style="height: 50px;"></div>
-                                    <?php endif; ?>
+                                    <input type="file" name="slider_image_1" class="form-control clean-form-control img-upload-input" accept="image/*" onchange="previewImage(this)">
+                                    <div class="mt-2 preview-wrapper" style="<?= empty($settingsData['slider_image_1']) ? 'display: none;' : '' ?>">
+                                        <img src="<?= empty($settingsData['slider_image_1']) ? '' : BASE_URL . $settingsData['slider_image_1'] ?>" style="height: 50px; border-radius: 5px; cursor: zoom-in;" onclick="openImageModal(this.src)">
+                                    </div>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label text-muted small fw-bold">Slider Image 2</label>
-                                    <input type="file" name="slider_image_2" class="form-control clean-form-control" accept="image/*">
-                                    <?php if(!empty($settingsData['slider_image_2'])): ?>
-                                        <div class="mt-2"><img src="<?= BASE_URL . $settingsData['slider_image_2'] ?>" style="height: 50px;"></div>
-                                    <?php endif; ?>
+                                    <input type="file" name="slider_image_2" class="form-control clean-form-control img-upload-input" accept="image/*" onchange="previewImage(this)">
+                                    <div class="mt-2 preview-wrapper" style="<?= empty($settingsData['slider_image_2']) ? 'display: none;' : '' ?>">
+                                        <img src="<?= empty($settingsData['slider_image_2']) ? '' : BASE_URL . $settingsData['slider_image_2'] ?>" style="height: 50px; border-radius: 5px; cursor: zoom-in;" onclick="openImageModal(this.src)">
+                                    </div>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label text-muted small fw-bold">Slider Image 3</label>
-                                    <input type="file" name="slider_image_3" class="form-control clean-form-control" accept="image/*">
-                                    <?php if(!empty($settingsData['slider_image_3'])): ?>
-                                        <div class="mt-2"><img src="<?= BASE_URL . $settingsData['slider_image_3'] ?>" style="height: 50px;"></div>
-                                    <?php endif; ?>
+                                    <input type="file" name="slider_image_3" class="form-control clean-form-control img-upload-input" accept="image/*" onchange="previewImage(this)">
+                                    <div class="mt-2 preview-wrapper" style="<?= empty($settingsData['slider_image_3']) ? 'display: none;' : '' ?>">
+                                        <img src="<?= empty($settingsData['slider_image_3']) ? '' : BASE_URL . $settingsData['slider_image_3'] ?>" style="height: 50px; border-radius: 5px; cursor: zoom-in;" onclick="openImageModal(this.src)">
+                                    </div>
                                 </div>
 
                                 <h6 class="fw-bold mt-4 mb-3">Contact Details</h6>
@@ -524,7 +524,40 @@ require_once __DIR__ . '/../includes/header.php';
   </div>
 </div>
 
+<!-- Image Preview Modal -->
+<div class="modal fade" id="imagePreviewModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content bg-transparent border-0">
+      <div class="modal-header border-0 pb-0">
+        <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center pt-0">
+        <img id="expandedImg" src="" class="img-fluid rounded shadow-lg" style="max-height: 80vh;">
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
+function previewImage(input) {
+    const wrapper = input.nextElementSibling;
+    const img = wrapper.querySelector('img');
+    
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            img.src = e.target.result;
+            wrapper.style.display = 'block';
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+function openImageModal(src) {
+    document.getElementById('expandedImg').src = src;
+    var myModal = new bootstrap.Modal(document.getElementById('imagePreviewModal'));
+    myModal.show();
+}
 // Simple script to handle dynamic tab coloring for Bootstrap list-group
 document.querySelectorAll('#adminTabs .list-group-item').forEach(function(el) {
     el.addEventListener('click', function() {

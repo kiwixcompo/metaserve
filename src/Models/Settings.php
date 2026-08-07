@@ -34,10 +34,12 @@ class Settings {
     }
 
     public function updateSetting($key, $value) {
-        $query = "UPDATE " . $this->table_name . " SET setting_value = :value WHERE setting_key = :key";
+        $query = "INSERT INTO " . $this->table_name . " (setting_key, setting_value) VALUES (:key, :value) 
+                  ON DUPLICATE KEY UPDATE setting_value = :value_update";
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':value', $value);
         $stmt->bindParam(':key', $key);
+        $stmt->bindParam(':value', $value);
+        $stmt->bindParam(':value_update', $value);
         return $stmt->execute();
     }
 }

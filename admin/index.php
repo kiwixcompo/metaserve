@@ -488,13 +488,34 @@ require_once __DIR__ . '/../includes/header.php';
                                 </div>
 
                                 <h6 class="fw-bold mt-4 mb-3">Paystack Configuration</h6>
+                                <div class="alert alert-info small py-2 mb-3">Leave blank to keep the current key unchanged.</div>
                                 <div class="mb-3">
                                     <label class="form-label text-muted small fw-bold">Public Key</label>
-                                    <input type="text" name="paystack_public_key" class="form-control clean-form-control" value="<?= htmlspecialchars($settingsData['paystack_public_key'] ?? '') ?>">
+                                    <input type="text" name="paystack_public_key" class="form-control clean-form-control" placeholder="<?= empty($settingsData['paystack_public_key']) ? 'Enter Public Key' : substr($settingsData['paystack_public_key'], 0, 8) . str_repeat('*', max(0, strlen($settingsData['paystack_public_key']) - 8)) ?>">
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label text-muted small fw-bold">Secret Key</label>
-                                    <input type="text" name="paystack_secret_key" class="form-control clean-form-control" value="<?= htmlspecialchars($settingsData['paystack_secret_key'] ?? '') ?>">
+                                    <input type="password" name="paystack_secret_key" class="form-control clean-form-control" placeholder="<?= empty($settingsData['paystack_secret_key']) ? 'Enter Secret Key' : substr($settingsData['paystack_secret_key'], 0, 8) . str_repeat('*', 24) ?>">
+                                </div>
+
+                                <h6 class="fw-bold mt-4 mb-3">Social Media Links</h6>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label text-muted small fw-bold"><i class="fa-brands fa-facebook text-primary me-1"></i> Facebook URL</label>
+                                        <input type="url" name="social_facebook" class="form-control clean-form-control" placeholder="https://facebook.com/..." value="<?= htmlspecialchars($settingsData['social_facebook'] ?? '') ?>">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label text-muted small fw-bold"><i class="fa-brands fa-twitter text-info me-1"></i> Twitter (X) URL</label>
+                                        <input type="url" name="social_twitter" class="form-control clean-form-control" placeholder="https://twitter.com/..." value="<?= htmlspecialchars($settingsData['social_twitter'] ?? '') ?>">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label text-muted small fw-bold"><i class="fa-brands fa-instagram text-danger me-1"></i> Instagram URL</label>
+                                        <input type="url" name="social_instagram" class="form-control clean-form-control" placeholder="https://instagram.com/..." value="<?= htmlspecialchars($settingsData['social_instagram'] ?? '') ?>">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label text-muted small fw-bold"><i class="fa-brands fa-linkedin text-primary me-1"></i> LinkedIn URL</label>
+                                        <input type="url" name="social_linkedin" class="form-control clean-form-control" placeholder="https://linkedin.com/..." value="<?= htmlspecialchars($settingsData['social_linkedin'] ?? '') ?>">
+                                    </div>
                                 </div>
 
                                 <button type="submit" class="btn btn-primary-custom px-4 mt-3">Save Settings</button>

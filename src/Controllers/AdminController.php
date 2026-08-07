@@ -105,9 +105,17 @@ class AdminController {
         $settingsModel = new Settings();
         
         // Handle text fields
-        $fields = ['contact_admin_phone', 'contact_tech_phone', 'paystack_public_key', 'paystack_secret_key'];
+        $fields = [
+            'contact_admin_phone', 'contact_tech_phone', 
+            'paystack_public_key', 'paystack_secret_key',
+            'social_facebook', 'social_twitter', 'social_instagram', 'social_linkedin'
+        ];
         foreach ($fields as $field) {
             if (isset($postData[$field])) {
+                // Do not overwrite paystack keys with empty strings (since they are masked in the UI)
+                if (($field === 'paystack_public_key' || $field === 'paystack_secret_key') && $postData[$field] === '') {
+                    continue;
+                }
                 $settingsModel->updateSetting($field, $postData[$field]);
             }
         }

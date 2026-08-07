@@ -87,6 +87,11 @@ class AuthController {
         $userData = $this->userModel->login($email, $password);
 
         if ($userData) {
+            // Check if account is active
+            if (isset($userData['is_active']) && $userData['is_active'] == 0) {
+                return ['status' => 'error', 'message' => 'Your account has been deactivated. Please contact the administrator.'];
+            }
+
             // Check if email is verified
             if (isset($userData['email_verified']) && $userData['email_verified'] == 0) {
                 return ['status' => 'error', 'message' => 'Please verify your email address before logging in. Check your inbox for the verification link.'];

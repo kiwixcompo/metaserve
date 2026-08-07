@@ -35,7 +35,7 @@ class Admin {
     }
 
     public function getAllUsers() {
-        $query = "SELECT u.id, u.first_name, u.last_name, u.email, u.created_at, r.name as role_name 
+        $query = "SELECT u.id, u.first_name, u.last_name, u.email, u.created_at, u.is_active, r.name as role_name 
                   FROM users u 
                   JOIN roles r ON u.role_id = r.id 
                   ORDER BY u.created_at DESC";
@@ -88,6 +88,42 @@ class Admin {
         $stmt = $this->conn->prepare("DELETE FROM users WHERE id = :id AND role_id != 1");
         $stmt->bindValue(':id', $id);
         return $stmt->execute();
+    }
+
+    public function bulkUsersAction($action, $userIds, $optionalData = null) {
+        if (empty($userIds) || !is_array($userIds)) return false;
+        
+        $ids = implode(',', array_map('intval', $userIds));
+
+        switch ($action) {
+            case 'delete':
+                // Protect Super Admins
+                $stmt = $this->conn->prepare("DELETE FROM users WHERE id IN ($ids) AND role_id != 1");
+                return $stmt->execute();
+
+            case 'deactivate':
+                // Protect Super Admins
+                $stmt = $this->conn->prepare("UPDATE users SET is_active = 0 WHERE id IN ($ids) AND role_id != 1");
+                return $stmt->execute();
+
+            case 'activate':
+                $stmt = $this->conn->prepare("UPDATE users SET is_active = 1 WHERE id IN ($ids)");
+                return $stmt->execute();
+
+            case 'verify_email':
+                $stmt = $this->conn->prepare("UPDATE users SET email_verified = 1 WHERE id IN ($ids)");
+                return $stmt->execute();
+
+            case 'change_password':
+                if (empty($optionalData)) return false;
+                $password_hash = password_hash($optionalData, PASSWORD_BCRYPT);
+                $stmt = $this->conn->prepare("UPDATE users SET password_hash = :hash WHERE id IN ($ids)");
+                $stmt->bindValue(':hash', $password_hash);
+                return $stmt->execute();
+                
+            default:
+                return false;
+        }
     }
 
     public function addProgramme($data) {

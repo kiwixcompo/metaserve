@@ -40,6 +40,27 @@ class AdminController {
         exit();
     }
 
+    public function bulkUsersAction($postData) {
+        if (empty($postData['user_ids']) || empty($postData['bulk_action'])) {
+            $_SESSION['error_msg'] = "Please select at least one user and an action.";
+            header("Location: " . BASE_URL . "admin/index.php?tab=users");
+            exit();
+        }
+
+        $action = $postData['bulk_action'];
+        $userIds = $postData['user_ids'];
+        $optionalData = ($action === 'change_password') ? ($postData['new_password'] ?? null) : null;
+
+        if ($this->adminModel->bulkUsersAction($action, $userIds, $optionalData)) {
+            $_SESSION['success_msg'] = "Successfully applied action to " . count($userIds) . " user(s).";
+        } else {
+            $_SESSION['error_msg'] = "Failed to apply bulk action.";
+        }
+        
+        header("Location: " . BASE_URL . "admin/index.php?tab=users");
+        exit();
+    }
+
     public function addProgramme($data) {
         if ($this->adminModel->addProgramme($data)) {
             $_SESSION['success_msg'] = "Programme added successfully.";
@@ -179,6 +200,9 @@ if (isset($_GET['action'])) {
     }
     elseif ($_GET['action'] === 'bulk_change_course' && $_SERVER['REQUEST_METHOD'] === 'POST') {
         $controller->bulkChangeCourse($_POST);
+    }
+    elseif ($_GET['action'] === 'bulk_users_action' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+        $controller->bulkUsersAction($_POST);
     }
     elseif ($_GET['action'] === 'update_settings' && $_SERVER['REQUEST_METHOD'] === 'POST') {
         $controller->updateSettings($_POST, $_FILES);

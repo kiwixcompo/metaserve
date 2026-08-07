@@ -37,7 +37,7 @@ try {
     }
 
     // 2. Check for email verification fields
-    echo "Checking `users` table for email verification fields...\n";
+    echo "Checking `users` table for email verification and status fields...\n";
     $checkCol = $conn->query("SHOW COLUMNS FROM users LIKE 'email_verified'");
     if ($checkCol->rowCount() == 0) {
         $conn->exec("ALTER TABLE users ADD COLUMN email_verified TINYINT(1) DEFAULT 0 AFTER email");
@@ -46,6 +46,14 @@ try {
         echo "✓ Added email verification fields to users table.\n";
     } else {
         echo "✓ Email verification fields already exist.\n";
+    }
+
+    $checkCol = $conn->query("SHOW COLUMNS FROM users LIKE 'is_active'");
+    if ($checkCol->rowCount() == 0) {
+        $conn->exec("ALTER TABLE users ADD COLUMN is_active TINYINT(1) DEFAULT 1 AFTER verification_token");
+        echo "✓ Added is_active status field to users table.\n";
+    } else {
+        echo "✓ is_active field already exists.\n";
     }
     
     // 3. Check for settings unique key (if they haven't run migrate.php before)

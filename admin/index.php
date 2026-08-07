@@ -178,36 +178,77 @@ require_once __DIR__ . '/../includes/header.php';
                                 </div>
                             </div>
 
-                            <div class="table-responsive">
-                                <table class="table table-hover align-middle" id="usersTable">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Email</th>
-                                            <th>Role</th>
-                                            <th>Registered</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php foreach($allUsers as $user): ?>
-                                        <tr class="user-row" data-role="<?= htmlspecialchars($user['role_name']) ?>">
-                                            <td class="user-name"><?= htmlspecialchars($user['first_name'] . ' ' . $user['last_name']) ?></td>
-                                            <td class="user-email"><?= htmlspecialchars($user['email']) ?></td>
-                                            <td><span class="badge bg-secondary"><?= htmlspecialchars($user['role_name']) ?></span></td>
-                                            <td class="small text-muted"><?= date('M j, Y', strtotime($user['created_at'])) ?></td>
-                                            <td>
-                                                <?php if($user['role_name'] !== 'Super Administrator'): ?>
-                                                    <a href="<?= BASE_URL ?>src/Controllers/AdminController.php?action=delete_user&id=<?= $user['id'] ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure you want to permanently delete this user?');"><i class="fa-solid fa-trash"></i></a>
-                                                <?php else: ?>
-                                                    <button class="btn btn-sm btn-outline-secondary" disabled><i class="fa-solid fa-shield"></i></button>
-                                                <?php endif; ?>
-                                            </td>
-                                        </tr>
-                                        <?php endforeach; ?>
-                                    </tbody>
-                                </table>
-                            </div>
+                            <form action="<?= BASE_URL ?>src/Controllers/AdminController.php?action=bulk_users_action" method="POST" id="bulkUsersForm">
+                                <div class="row align-items-center mb-3 bg-light p-3 rounded mx-0 border" id="bulkUsersToolbar" style="display: none;">
+                                    <div class="col-md-auto">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="selectAllUsersHeader">
+                                            <label class="form-check-label fw-bold" for="selectAllUsersHeader">Select All</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md">
+                                        <select name="bulk_action" class="form-select form-select-sm" id="bulkActionSelect" required onchange="handleBulkActionSelect(this)">
+                                            <option value="">-- Bulk Actions --</option>
+                                            <option value="deactivate">Deactivate Accounts (Block Login)</option>
+                                            <option value="activate">Activate Accounts (Allow Login)</option>
+                                            <option value="verify_email">Force Verify Emails</option>
+                                            <option value="change_password">Change Passwords</option>
+                                            <option value="delete">Delete Permanently</option>
+                                        </select>
+                                    </div>
+                                    <!-- Hidden password field, shown by JS when needed -->
+                                    <div class="col-md-3" id="bulkPasswordContainer" style="display: none;">
+                                        <input type="text" name="new_password" class="form-control form-control-sm" placeholder="Type new password...">
+                                    </div>
+                                    <div class="col-md-auto text-end">
+                                        <button type="submit" class="btn btn-sm btn-primary-custom" onclick="return confirmBulkAction();"><i class="fa-solid fa-bolt me-1"></i> Apply Action</button>
+                                    </div>
+                                </div>
+
+                                <div class="table-responsive">
+                                    <table class="table table-hover align-middle" id="usersTable">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th style="width: 40px;">
+                                                    <input class="form-check-input" type="checkbox" id="selectAllUsers">
+                                                </th>
+                                                <th>Name</th>
+                                                <th>Email</th>
+                                                <th>Role</th>
+                                                <th>Registered</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach($allUsers as $user): ?>
+                                            <tr class="user-row <?= ($user['is_active'] == 0) ? 'table-danger' : '' ?>" data-role="<?= htmlspecialchars($user['role_name']) ?>">
+                                                <td>
+                                                    <?php if($user['role_name'] !== 'Super Administrator'): ?>
+                                                        <input class="form-check-input user-checkbox" type="checkbox" name="user_ids[]" value="<?= $user['id'] ?>">
+                                                    <?php endif; ?>
+                                                </td>
+                                                <td class="user-name">
+                                                    <?= htmlspecialchars($user['first_name'] . ' ' . $user['last_name']) ?>
+                                                    <?php if($user['is_active'] == 0): ?>
+                                                        <span class="badge bg-danger ms-1" style="font-size: 0.65em;">Deactivated</span>
+                                                    <?php endif; ?>
+                                                </td>
+                                                <td class="user-email"><?= htmlspecialchars($user['email']) ?></td>
+                                                <td><span class="badge bg-secondary"><?= htmlspecialchars($user['role_name']) ?></span></td>
+                                                <td class="small text-muted"><?= date('M j, Y', strtotime($user['created_at'])) ?></td>
+                                                <td>
+                                                    <?php if($user['role_name'] !== 'Super Administrator'): ?>
+                                                        <a href="<?= BASE_URL ?>src/Controllers/AdminController.php?action=delete_user&id=<?= $user['id'] ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure you want to permanently delete this user?');"><i class="fa-solid fa-trash"></i></a>
+                                                    <?php else: ?>
+                                                        <button class="btn btn-sm btn-outline-secondary" disabled><i class="fa-solid fa-shield"></i></button>
+                                                    <?php endif; ?>
+                                                </td>
+                                            </tr>
+                                            <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </form>
                         </div>
                     </div>
                     
@@ -648,7 +689,7 @@ function exportUsersToCSV(e) {
     // Header
     const cols = rows[0].querySelectorAll('th');
     let rowData = [];
-    for (let j = 0; j < cols.length - 1; j++) { // Exclude 'Action' column
+    for (let j = 1; j < cols.length - 1; j++) { // Skip Checkbox and Action columns
         rowData.push('"' + cols[j].innerText.replace(/"/g, '""') + '"');
     }
     csv.push(rowData.join(','));
@@ -658,7 +699,7 @@ function exportUsersToCSV(e) {
         if (rows[i].style.display !== 'none') {
             const tds = rows[i].querySelectorAll('td');
             let tData = [];
-            for (let j = 0; j < tds.length - 1; j++) { // Exclude 'Action' column
+            for (let j = 1; j < tds.length - 1; j++) { // Skip Checkbox and Action columns
                 tData.push('"' + tds[j].innerText.replace(/"/g, '""') + '"');
             }
             csv.push(tData.join(','));
@@ -689,7 +730,7 @@ function exportUsersToPDF(e) {
     
     // Header
     const cols = rows[0].querySelectorAll('th');
-    for (let j = 0; j < cols.length - 1; j++) {
+    for (let j = 1; j < cols.length - 1; j++) {
         head.push(cols[j].innerText);
     }
     
@@ -698,7 +739,7 @@ function exportUsersToPDF(e) {
         if (rows[i].style.display !== 'none') {
             const tds = rows[i].querySelectorAll('td');
             let tData = [];
-            for (let j = 0; j < tds.length - 1; j++) {
+            for (let j = 1; j < tds.length - 1; j++) {
                 tData.push(tds[j].innerText);
             }
             body.push(tData);
@@ -714,6 +755,63 @@ function exportUsersToPDF(e) {
     });
     
     doc.save('metaserve_users.pdf');
+}
+// Bulk User Actions Logic
+const selectAllUsersHeader = document.getElementById('selectAllUsersHeader');
+const selectAllUsers = document.getElementById('selectAllUsers');
+const userCheckboxes = document.querySelectorAll('.user-checkbox');
+const bulkUsersToolbar = document.getElementById('bulkUsersToolbar');
+const bulkActionSelect = document.getElementById('bulkActionSelect');
+const bulkPasswordContainer = document.getElementById('bulkPasswordContainer');
+
+function updateBulkToolbarVisibility() {
+    const anyChecked = Array.from(userCheckboxes).some(cb => cb.checked);
+    bulkUsersToolbar.style.display = anyChecked ? 'flex' : 'none';
+}
+
+if (selectAllUsersHeader && selectAllUsers) {
+    selectAllUsersHeader.addEventListener('change', function() {
+        selectAllUsers.checked = this.checked;
+        userCheckboxes.forEach(cb => {
+            if(cb.closest('tr').style.display !== 'none') {
+                cb.checked = this.checked;
+            }
+        });
+        updateBulkToolbarVisibility();
+    });
+
+    selectAllUsers.addEventListener('change', function() {
+        selectAllUsersHeader.checked = this.checked;
+        userCheckboxes.forEach(cb => {
+            if(cb.closest('tr').style.display !== 'none') {
+                cb.checked = this.checked;
+            }
+        });
+        updateBulkToolbarVisibility();
+    });
+
+    userCheckboxes.forEach(cb => {
+        cb.addEventListener('change', updateBulkToolbarVisibility);
+    });
+}
+
+function handleBulkActionSelect(select) {
+    if (select.value === 'change_password') {
+        bulkPasswordContainer.style.display = 'block';
+        bulkPasswordContainer.querySelector('input').setAttribute('required', 'required');
+    } else {
+        bulkPasswordContainer.style.display = 'none';
+        bulkPasswordContainer.querySelector('input').removeAttribute('required');
+    }
+}
+
+function confirmBulkAction() {
+    const action = bulkActionSelect.options[bulkActionSelect.selectedIndex].text;
+    if (!bulkActionSelect.value) {
+        alert("Please select a bulk action.");
+        return false;
+    }
+    return confirm("Are you sure you want to " + action + " for all selected users?");
 }
 </script>
 

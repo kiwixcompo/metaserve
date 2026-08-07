@@ -61,7 +61,7 @@ class Admin {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function createFacilitator($data) {
+    public function createStaffUser($data) {
         // Check if email exists
         $stmt = $this->conn->prepare("SELECT id FROM users WHERE email = :email");
         $stmt->bindValue(':email', $data['email']);
@@ -70,9 +70,10 @@ class Admin {
             return false;
         }
 
-        $query = "INSERT INTO users (role_id, first_name, last_name, email, password_hash, type) 
-                  VALUES (4, :first_name, :last_name, :email, :password_hash, 'external')";
+        $query = "INSERT INTO users (role_id, first_name, last_name, email, password_hash, type, email_verified, is_active) 
+                  VALUES (:role_id, :first_name, :last_name, :email, :password_hash, 'external', 1, 1)";
         $stmt = $this->conn->prepare($query);
+        $stmt->bindValue(':role_id', (int)$data['role_id'], PDO::PARAM_INT);
         $stmt->bindValue(':first_name', htmlspecialchars(strip_tags($data['first_name'])));
         $stmt->bindValue(':last_name', htmlspecialchars(strip_tags($data['last_name'])));
         $stmt->bindValue(':email', htmlspecialchars(strip_tags($data['email'])));

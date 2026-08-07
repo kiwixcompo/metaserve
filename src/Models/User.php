@@ -110,4 +110,41 @@ class User {
         }
         return false;
     }
+    public function getUserById($id) {
+        $query = "SELECT * FROM " . $this->table . " WHERE id = :id LIMIT 1";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function updateProfile($data) {
+        $updates = [
+            "first_name = :first_name",
+            "last_name = :last_name",
+            "phone = :phone",
+            "alt_phone = :alt_phone",
+            "email = :email"
+        ];
+        
+        if (!empty($data['password'])) {
+            $updates[] = "password_hash = :password_hash";
+        }
+        
+        $query = "UPDATE " . $this->table . " SET " . implode(", ", $updates) . " WHERE id = :id";
+        $stmt = $this->conn->prepare($query);
+        
+        $stmt->bindValue(':id', $data['id']);
+        $stmt->bindValue(':first_name', htmlspecialchars(strip_tags($data['first_name'])));
+        $stmt->bindValue(':last_name', htmlspecialchars(strip_tags($data['last_name'])));
+        $stmt->bindValue(':phone', htmlspecialchars(strip_tags($data['phone'])));
+        $stmt->bindValue(':alt_phone', htmlspecialchars(strip_tags($data['alt_phone'] ?? '')));
+        $stmt->bindValue(':email', htmlspecialchars(strip_tags($data['email'])));
+        
+        if (!empty($data['password'])) {
+            $stmt->bindValue(':password_hash', password_hash($data['password'], PASSWORD_BCRYPT));
+        }
+        
+        return $stmt->execute();
+    }
 }

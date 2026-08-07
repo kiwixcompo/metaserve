@@ -141,6 +141,9 @@ require_once __DIR__ . '/../includes/header.php';
                         <div class="clean-card p-4 shadow-sm">
                             <div class="d-flex justify-content-between align-items-center mb-4">
                                 <h5 class="fw-bold text-dark mb-0">All Registered Users</h5>
+                                <button class="btn btn-primary-custom px-4" data-bs-toggle="modal" data-bs-target="#addStaffModal">
+                                    <i class="fa-solid fa-user-plus me-2"></i> Add Staff
+                                </button>
                             </div>
                             
                             <!-- Filters -->
@@ -338,7 +341,7 @@ require_once __DIR__ . '/../includes/header.php';
                     <div class="tab-pane fade <?= $activeTab === 'facilitators' ? 'show active' : '' ?>" id="facilitators" role="tabpanel">
                         <div class="clean-card p-4 mb-4 shadow-sm d-flex justify-content-between align-items-center">
                             <h5 class="fw-bold text-dark mb-0">Facilitator Management</h5>
-                            <button class="btn btn-primary-custom px-4" data-bs-toggle="modal" data-bs-target="#addFacilitatorModal">
+                            <button class="btn btn-primary-custom px-4" data-bs-toggle="modal" data-bs-target="#addStaffModal">
                                 <i class="fa-solid fa-user-plus me-2"></i> Add Facilitator
                             </button>
                         </div>
@@ -529,17 +532,27 @@ require_once __DIR__ . '/../includes/header.php';
     </div>
 </section>
 
-<!-- Add Facilitator Modal -->
-<div class="modal fade" id="addFacilitatorModal" tabindex="-1">
+<!-- Add Staff Modal -->
+<div class="modal fade" id="addStaffModal" tabindex="-1">
   <div class="modal-dialog">
     <div class="modal-content clean-card border-0">
-      <form action="<?= BASE_URL ?>src/Controllers/AdminController.php?action=add_facilitator" method="POST">
+      <form action="<?= BASE_URL ?>src/Controllers/AdminController.php?action=add_staff" method="POST">
       <div class="modal-header border-bottom border-light">
-        <h5 class="modal-title fw-bold text-dark"><i class="fa-solid fa-user-plus text-primary-custom me-2"></i> Add Facilitator</h5>
+        <h5 class="modal-title fw-bold text-dark"><i class="fa-solid fa-user-plus text-primary-custom me-2"></i> Add Staff User</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body p-4">
-        <div class="alert alert-info small border-0 bg-primary-light text-primary-custom"><i class="fa-solid fa-circle-info me-2"></i> Their role will automatically be assigned as 'Facilitator'.</div>
+        <div class="alert alert-info small border-0 bg-primary-light text-primary-custom"><i class="fa-solid fa-circle-info me-2"></i> This user will be automatically verified and can log in immediately.</div>
+        <div class="mb-3">
+            <label class="form-label text-muted small fw-bold">Role</label>
+            <select name="role_id" class="form-select clean-form-control" required>
+                <option value="1">Super Administrator</option>
+                <option value="2">Head of Admin/Accounts</option>
+                <option value="3">Programme Coordinator</option>
+                <option value="4" selected>Facilitator</option>
+                <option value="7">University Management</option>
+            </select>
+        </div>
         <div class="mb-3">
             <label class="form-label text-muted small fw-bold">First Name</label>
             <input type="text" name="first_name" class="form-control clean-form-control" required placeholder="Jane">

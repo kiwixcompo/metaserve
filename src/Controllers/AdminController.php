@@ -20,13 +20,13 @@ class AdminController {
         $this->adminModel = new Admin();
     }
 
-    public function addFacilitator($data) {
-        if ($this->adminModel->createFacilitator($data)) {
-            $_SESSION['success_msg'] = "Facilitator account created successfully!";
+    public function addStaffUser($data) {
+        if ($this->adminModel->createStaffUser($data)) {
+            $_SESSION['success_msg'] = "Staff account created successfully!";
         } else {
-            $_SESSION['error_msg'] = "Failed to create facilitator. The email might already be in use.";
+            $_SESSION['error_msg'] = "Failed to create staff account. The email might already be in use.";
         }
-        header("Location: " . BASE_URL . "admin/index.php?tab=facilitators");
+        header("Location: " . BASE_URL . "admin/index.php?tab=users");
         exit();
     }
 
@@ -185,8 +185,8 @@ class AdminController {
 if (isset($_GET['action'])) {
     $controller = new AdminController();
     
-    if ($_GET['action'] === 'add_facilitator' && $_SERVER['REQUEST_METHOD'] === 'POST') {
-        $controller->addFacilitator($_POST);
+    if ($_GET['action'] === 'add_staff' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+        $controller->addStaffUser($_POST);
     }
     elseif ($_GET['action'] === 'delete_user' && isset($_GET['id'])) {
         $controller->deleteUser($_GET['id']);

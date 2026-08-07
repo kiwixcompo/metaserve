@@ -53,6 +53,7 @@
                 <li class="nav-item"><a class="nav-link px-3" href="<?= BASE_URL ?>courses.php">Courses</a></li>
                 <li class="nav-item"><a class="nav-link px-3" href="<?= BASE_URL ?>contact.php">Contact</a></li>
                 <?php if (isset($_SESSION['user_id'])): ?>
+                    <li class="nav-item"><a class="nav-link px-3" href="<?= BASE_URL ?>profile.php"><i class="fa-solid fa-user-circle me-1"></i> My Profile</a></li>
                     <li class="nav-item"><a class="nav-link px-3" href="<?= BASE_URL ?>src/Controllers/AuthController.php?action=logout">Logout</a></li>
                 <?php else: ?>
                     <li class="nav-item ms-lg-3"><a class="btn btn-outline-custom btn-sm px-4 py-2 me-2" href="<?= BASE_URL ?>login.php">Login</a></li>

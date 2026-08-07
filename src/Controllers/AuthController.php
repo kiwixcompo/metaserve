@@ -73,7 +73,7 @@ class AuthController {
             $emailService = new \App\Models\EmailService();
             $emailService->sendVerificationEmail($postData['email'], $postData['first_name'], $postData['verification_token']);
 
-            return ['status' => 'success', 'redirect' => BASE_URL . 'register.php?success=registered'];
+            return ['status' => 'success', 'redirect' => BASE_URL . 'register.php?success=registered', 'user_id' => $userId];
         } else {
             return ['status' => 'error', 'errors' => ['Failed to register. Please try again.']];
         }

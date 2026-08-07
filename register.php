@@ -33,11 +33,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
             
             $stmt = $conn->prepare("SELECT id FROM enrollments WHERE user_id = ? AND programme_id = ?");
-            $stmt->execute([$_SESSION['user_id'], $prog_id]);
+            $stmt->execute([$result['user_id'], $prog_id]);
             
             if ($stmt->rowCount() == 0) {
                 $stmt = $conn->prepare("INSERT INTO enrollments (user_id, programme_id, status) VALUES (?, ?, 'pending')");
-                $stmt->execute([$_SESSION['user_id'], $prog_id]);
+                $stmt->execute([$result['user_id'], $prog_id]);
             }
         }
         

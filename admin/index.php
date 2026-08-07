@@ -139,9 +139,36 @@ require_once __DIR__ . '/../includes/header.php';
                     <!-- Users Tab -->
                     <div class="tab-pane fade <?= $activeTab === 'users' ? 'show active' : '' ?>" id="users" role="tabpanel">
                         <div class="clean-card p-4 shadow-sm">
-                            <h5 class="fw-bold text-dark mb-4">All Registered Users</h5>
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <h5 class="fw-bold text-dark mb-0">All Registered Users</h5>
+                            </div>
+                            
+                            <!-- Filters -->
+                            <div class="row g-3 mb-4 bg-light p-3 rounded border">
+                                <div class="col-md-4">
+                                    <label class="form-label small fw-bold text-muted">Search User</label>
+                                    <div class="input-group input-group-sm">
+                                        <span class="input-group-text bg-white"><i class="fa-solid fa-search"></i></span>
+                                        <input type="text" id="userSearchInput" class="form-control" placeholder="Search by name or email...">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label small fw-bold text-muted">Filter by Role</label>
+                                    <select id="userRoleFilter" class="form-select form-select-sm">
+                                        <option value="all">All Roles</option>
+                                        <option value="Super Administrator">Super Administrator</option>
+                                        <option value="Head of Admin/Accounts">Head of Admin/Accounts</option>
+                                        <option value="Programme Coordinator">Programme Coordinator</option>
+                                        <option value="Facilitator">Facilitator</option>
+                                        <option value="Student">Student (TSU)</option>
+                                        <option value="External Candidate">External Candidate</option>
+                                        <option value="University Management">University Management</option>
+                                    </select>
+                                </div>
+                            </div>
+
                             <div class="table-responsive">
-                                <table class="table table-hover align-middle">
+                                <table class="table table-hover align-middle" id="usersTable">
                                     <thead class="table-light">
                                         <tr>
                                             <th>Name</th>
@@ -153,9 +180,9 @@ require_once __DIR__ . '/../includes/header.php';
                                     </thead>
                                     <tbody>
                                         <?php foreach($allUsers as $user): ?>
-                                        <tr>
-                                            <td><?= htmlspecialchars($user['first_name'] . ' ' . $user['last_name']) ?></td>
-                                            <td><?= htmlspecialchars($user['email']) ?></td>
+                                        <tr class="user-row" data-role="<?= htmlspecialchars($user['role_name']) ?>">
+                                            <td class="user-name"><?= htmlspecialchars($user['first_name'] . ' ' . $user['last_name']) ?></td>
+                                            <td class="user-email"><?= htmlspecialchars($user['email']) ?></td>
                                             <td><span class="badge bg-secondary"><?= htmlspecialchars($user['role_name']) ?></span></td>
                                             <td class="small text-muted"><?= date('M j, Y', strtotime($user['created_at'])) ?></td>
                                             <td>
@@ -575,6 +602,31 @@ document.querySelectorAll('#adminTabs .list-group-item').forEach(function(el) {
         this.setAttribute('style', 'background-color: var(--primary-color); border-color: var(--primary-color); color: white !important;');
     });
 });
+
+// User filtering logic
+function filterUsers() {
+    const searchVal = document.getElementById('userSearchInput').value.toLowerCase();
+    const roleVal = document.getElementById('userRoleFilter').value;
+    const rows = document.querySelectorAll('.user-row');
+    
+    rows.forEach(row => {
+        const name = row.querySelector('.user-name').textContent.toLowerCase();
+        const email = row.querySelector('.user-email').textContent.toLowerCase();
+        const role = row.getAttribute('data-role');
+        
+        const matchesSearch = name.includes(searchVal) || email.includes(searchVal);
+        const matchesRole = (roleVal === 'all') || (role === roleVal);
+        
+        if (matchesSearch && matchesRole) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+}
+
+document.getElementById('userSearchInput')?.addEventListener('input', filterUsers);
+document.getElementById('userRoleFilter')?.addEventListener('change', filterUsers);
 </script>
 
 <?php require_once __DIR__ . '/../includes/footer.php'; ?>

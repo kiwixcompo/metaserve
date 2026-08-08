@@ -60,29 +60,64 @@ $settingsData = $settingsModel->getAllSettings();
                 </ul>
             </div>
             
+<?php
+$msg = '';
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_contact'])) {
+    $name = strip_tags(trim($_POST['name'] ?? ''));
+    $email = filter_var(trim($_POST['email'] ?? ''), FILTER_SANITIZE_EMAIL);
+    $subject = strip_tags(trim($_POST['subject'] ?? ''));
+    $message = strip_tags(trim($_POST['message'] ?? ''));
+
+    if (empty($name) || empty($email) || empty($subject) || empty($message)) {
+        $msg = '<div class="alert alert-danger">Please fill in all required fields.</div>';
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $msg = '<div class="alert alert-danger">Invalid email format.</div>';
+    } else {
+        $to = 'info@metaserve.com.ng';
+        $email_subject = "Contact Form: $subject";
+        $email_body = "You have received a new message from the contact form on Metaserve.\n\n".
+                      "Name: $name\n".
+                      "Email: $email\n".
+                      "Subject: $subject\n\n".
+                      "Message:\n$message\n";
+        
+        // Ensure the email appears to come from info@metaserve.com.ng, but reply goes to the sender
+        $headers = "From: info@metaserve.com.ng\r\n";
+        $headers .= "Reply-To: $email\r\n";
+        
+        if (mail($to, $email_subject, $email_body, $headers)) {
+            $msg = '<div class="alert alert-success"><i class="fa-solid fa-circle-check me-2"></i>Thank you! Your message has been sent successfully.</div>';
+        } else {
+            $msg = '<div class="alert alert-danger"><i class="fa-solid fa-triangle-exclamation me-2"></i>Oops! Something went wrong, and we couldn\'t send your message.</div>';
+        }
+    }
+}
+?>
+
             <div class="col-lg-6">
                 <div class="clean-card p-4 p-md-5 bg-white border shadow-sm rounded-4">
                     <h4 class="fw-bold text-dark mb-4">Send us a message</h4>
-                    <form action="#" method="POST">
+                    <?= $msg ?>
+                    <form action="contact.php" method="POST">
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label class="form-label fw-bold">Full Name</label>
-                                <input type="text" class="form-control clean-form-control" placeholder="John Doe" required>
+                                <input type="text" name="name" class="form-control clean-form-control" placeholder="John Doe" required>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label fw-bold">Email Address</label>
-                                <input type="email" class="form-control clean-form-control" placeholder="john@example.com" required>
+                                <input type="email" name="email" class="form-control clean-form-control" placeholder="john@example.com" required>
                             </div>
                             <div class="col-12">
                                 <label class="form-label fw-bold">Subject</label>
-                                <input type="text" class="form-control clean-form-control" placeholder="How can we help you?" required>
+                                <input type="text" name="subject" class="form-control clean-form-control" placeholder="How can we help you?" required>
                             </div>
                             <div class="col-12">
                                 <label class="form-label fw-bold">Message</label>
-                                <textarea class="form-control clean-form-control" rows="5" placeholder="Write your message here..." required></textarea>
+                                <textarea name="message" class="form-control clean-form-control" rows="5" placeholder="Write your message here..." required></textarea>
                             </div>
                             <div class="col-12 mt-4">
-                                <button type="button" class="btn btn-primary-custom w-100 py-3 fw-bold fs-6">Send Message <i class="fa-solid fa-paper-plane ms-2"></i></button>
+                                <button type="submit" name="send_contact" class="btn btn-primary-custom w-100 py-3 fw-bold fs-6">Send Message <i class="fa-solid fa-paper-plane ms-2"></i></button>
                             </div>
                         </div>
                     </form>

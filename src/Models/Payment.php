@@ -48,9 +48,9 @@ class Payment {
         }
 
         if($stmt->execute()) {
-             // Business Logic: If payment is approved, automatically mark enrollment as 'active'
              if ($status === 'approved') {
-                 $q2 = "UPDATE enrollments SET status = 'active' WHERE id = (SELECT enrollment_id FROM payments WHERE reference = :ref LIMIT 1)";
+                 // Update enrollments: set both status='active' AND payment_status='paid'
+                 $q2 = "UPDATE enrollments SET status = 'active', payment_status = 'paid' WHERE id = (SELECT enrollment_id FROM payments WHERE reference = :ref LIMIT 1)";
                  $stmt2 = $this->conn->prepare($q2);
                  $stmt2->bindValue(':ref', $reference);
                  $stmt2->execute();

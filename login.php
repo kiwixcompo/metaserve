@@ -45,28 +45,7 @@ require_once __DIR__ . '/includes/header.php';
 
                     <form method="POST" action="login.php">
                         
-                        <!-- Autofill Feature for Testing -->
-                        <div class="mb-4 text-center p-3 rounded-3 border" style="background-color: rgba(30, 86, 49, 0.05); border-color: rgba(30, 86, 49, 0.1) !important;">
-                            <label class="form-label text-primary-custom small fw-bold text-uppercase mb-2"><i class="fa-solid fa-vial me-2"></i> Quick Test Accounts (Demo)</label>
-                            <select class="form-select clean-form-control" onchange="autofillDemo(this.value)">
-                                <option value="" class="text-muted">-- Select Role to Autofill --</option>
-                                <option value="admin@metaserve.com">Super Admin</option>
-                                <option value="accounts@metaserve.com">Head of Accounts</option>
-                                <option value="coordinator@metaserve.com">Programme Coordinator</option>
-                                <option value="facilitator@metaserve.com">Facilitator</option>
-                                <option value="student@metaserve.com">Student (TSU)</option>
-                                <option value="external@metaserve.com">External Candidate</option>
-                                <option value="management@metaserve.com">University Management</option>
-                            </select>
-                        </div>
-                        <script>
-                        function autofillDemo(email) {
-                            if (email) {
-                                document.querySelector('input[name="email"]').value = email;
-                                document.querySelector('input[name="password"]').value = 'Password@123';
-                            }
-                        }
-                        </script>
+
                         
                         <div class="mb-4">
                             <label class="form-label">Email Address</label>

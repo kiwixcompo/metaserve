@@ -11,7 +11,10 @@ if (isset($_GET['token'])) {
     
     $user = $userModel->verifyEmail($token);
     
-    if ($user) {
+    if ($user === 'already_verified') {
+        $message = "Your email address is already verified! You can proceed to log in.";
+        $status = 'success';
+    } elseif ($user) {
         $message = "Your email address has been successfully verified! You can now log in to your dashboard.";
         $status = 'success';
         

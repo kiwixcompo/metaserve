@@ -94,15 +94,20 @@ class User {
     }
 
     public function verifyEmail($token) {
-        $query = "SELECT id, email, first_name FROM " . $this->table . " WHERE verification_token = :token LIMIT 1";
+        $query = "SELECT id, email, first_name, email_verified FROM " . $this->table . " WHERE verification_token = :token LIMIT 1";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':token', $token);
         $stmt->execute();
 
         if ($stmt->rowCount() > 0) {
             $user = $stmt->fetch();
-            // Update user to verified and clear token
-            $updateQuery = "UPDATE " . $this->table . " SET email_verified = 1, verification_token = NULL WHERE id = :id";
+            
+            if ($user['email_verified'] == 1) {
+                return 'already_verified';
+            }
+
+            // Update user to verified but DO NOT clear token to prevent email scanner false negatives on user click
+            $updateQuery = "UPDATE " . $this->table . " SET email_verified = 1 WHERE id = :id";
             $updateStmt = $this->conn->prepare($updateQuery);
             $updateStmt->bindParam(':id', $user['id']);
             $updateStmt->execute();

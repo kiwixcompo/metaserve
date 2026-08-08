@@ -10,14 +10,7 @@ if (!isset($_SESSION['user_id']) || !in_array($_SESSION['role_id'], [5, 6])) {
 $db = new Database();
 $conn = $db->getConnection();
 
-// Handle Payment Bypass
-if (isset($_GET['action']) && $_GET['action'] == 'bypass_payment') {
-    $stmt = $conn->prepare("UPDATE enrollments SET status = 'active' WHERE user_id = :uid AND status = 'pending'");
-    $stmt->execute(['uid' => $_SESSION['user_id']]);
-    $_SESSION['success_msg'] = "Test Mode: Your enrollments have been auto-approved!";
-    header("Location: index.php");
-    exit();
-}
+
 
 // Fetch Enrollments
 $stmt = $conn->prepare("SELECT e.*, p.name as prog_name, c.name as explicit_course_name FROM enrollments e JOIN programmes p ON e.programme_id = p.id LEFT JOIN courses c ON e.course_id = c.id WHERE e.user_id = :uid");
@@ -83,7 +76,6 @@ require_once __DIR__ . '/../includes/header.php';
                     </div>
                     <div class="d-flex gap-2 mt-2">
                         <a href="<?= BASE_URL ?>payment.php" class="btn btn-primary-custom px-4 py-2"><i class="fa-solid fa-credit-card me-2"></i> Proceed to Payment</a>
-                        <a href="index.php?action=bypass_payment" class="btn btn-outline-danger px-4 py-2" onclick="return confirm('Use Test Bypass?');"><i class="fa-solid fa-unlock me-2"></i> Test Bypass (Auto-Approve)</a>
                     </div>
                     <?php endif; ?>
 

@@ -272,10 +272,10 @@ require_once __DIR__ . '/includes/header.php';
                                     <select name="programme_id" id="programme_id" class="form-select clean-form-control" required>
                                         <option value="">Choose a programme...</option>
                                         <?php foreach($programmes as $p): ?>
-                                            <option value="<?= $p['id'] ?>"><?= htmlspecialchars($p['name']) ?> - ₦<?= number_format($p['cost'], 2) ?></option>
+                                            <option value="<?= $p['id'] ?>" data-base="<?= $p['cost'] ?>"><?= htmlspecialchars($p['name']) ?> - ₦<?= number_format($p['cost'], 2) ?></option>
                                         <?php endforeach; ?>
                                     </select>
-                                    <small class="text-muted d-block mt-1">Note: Pricing updates dynamically based on Applicant Category.</small>
+                                    <small class="text-muted d-block mt-1">Note: Pricing updates dynamically based on Applicant Category (TSU vs External).</small>
                                 </div>
 
                                 <div class="col-md-6">
@@ -414,6 +414,8 @@ require_once __DIR__ . '/includes/header.php';
         const hqInput = document.getElementById('highest_qualification');
         const occInput = document.getElementById('occupation');
 
+        const progSelect = document.getElementById('programme_id');
+
         if (type === 'tsu_student') {
             tsuFields.style.display = 'flex';
             extFields.style.display = 'none';
@@ -422,6 +424,14 @@ require_once __DIR__ . '/includes/header.php';
             tsuLevels[0].required = true;
             hqInput.required = false;
             occInput.required = false;
+
+            // Update prices for TSU (Base Cost)
+            Array.from(progSelect.options).forEach(opt => {
+                if (opt.value !== "") {
+                    const baseCost = parseFloat(opt.getAttribute('data-base'));
+                    opt.text = opt.text.split(' - ')[0] + ' - ₦' + baseCost.toLocaleString('en-US', {minimumFractionDigits: 2});
+                }
+            });
         } else {
             tsuFields.style.display = 'none';
             extFields.style.display = 'flex';
@@ -430,6 +440,15 @@ require_once __DIR__ . '/includes/header.php';
             tsuLevels[0].required = false;
             hqInput.required = true;
             occInput.required = true;
+
+            // Update prices for External (Base Cost * 2.5)
+            Array.from(progSelect.options).forEach(opt => {
+                if (opt.value !== "") {
+                    const baseCost = parseFloat(opt.getAttribute('data-base'));
+                    const extCost = baseCost * 2.5;
+                    opt.text = opt.text.split(' - ')[0] + ' - ₦' + extCost.toLocaleString('en-US', {minimumFractionDigits: 2});
+                }
+            });
         }
     }
 

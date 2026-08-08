@@ -42,6 +42,18 @@ if ($progId == 1) { // Mandatory Computer Induction Course
     $amount = 15000; // fallback
 }
 
+// Add admin charge if not yet purchased
+$stmt = $conn->prepare("SELECT form_purchased FROM users WHERE id = ?");
+$stmt->execute([$_SESSION['user_id']]);
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+$admin_charge = ($user['form_purchased']) ? 0 : 2000;
+
+$amount += $admin_charge;
+
+// Update enrollments with the expected amounts
+$stmt = $conn->prepare("UPDATE enrollments SET amount_paid = ?, form_fee_paid = ? WHERE id = ?");
+$stmt->execute([$amount - $admin_charge, $admin_charge, $enrollment_id]);
+
 $error = '';
 $success = '';
 
@@ -134,11 +146,11 @@ require_once __DIR__ . '/includes/header.php';
                                   <label class="form-label fw-bold text-dark small text-uppercase">Metaserve Bank Details</label>
                                   <div class="p-3 bg-light rounded-3 border border-2">
                                       <p class="mb-1 text-muted small">Bank Name:</p>
-                                      <h6 class="fw-bold">First Bank of Nigeria</h6>
+                                      <h6 class="fw-bold">Taj Bank</h6>
                                       <p class="mb-1 mt-3 text-muted small">Account Name:</p>
                                       <h6 class="fw-bold">Metaserve Info Tech Ltd</h6>
                                       <p class="mb-1 mt-3 text-muted small">Account Number:</p>
-                                      <h5 class="fw-bold text-primary-custom font-monospace tracking-wide">2038475639</h5>
+                                      <h5 class="fw-bold text-primary-custom font-monospace tracking-wide">0008463824</h5>
                                   </div>
                               </div>
                               

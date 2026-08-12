@@ -48,3 +48,4 @@ Stack trace:
 [03-Aug-2026 13:26:40 UTC] PHP Stack trace:
 [03-Aug-2026 13:26:40 UTC] PHP   1. {main}() C:\wamp64\www\metaserve\payment.php:0
 [03-Aug-2026 13:26:40 UTC] PHP   2. PaymentController->initializePaystack($email = 'student@metaserve.com', $amount = 20000, $enrollment_id = 6, $user_id = 6) C:\wamp64\www\metaserve\payment.php:53
+[12-Aug-2026 11:23:34 UTC] Email sending failed to smith@row.com. Error: SMTP Error: Could not connect to SMTP host. Failed to connect to server SMTP server error: Failed to connect to server Additional SMTP info: php_network_getaddresses: getaddrinfo for mail.metaserve.com.ng failed: No such host is known. 

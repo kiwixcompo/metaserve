@@ -67,7 +67,7 @@ require_once __DIR__ . '/includes/header.php';
                                 <input class="form-check-input" type="checkbox" id="rememberMe">
                                 <label class="form-check-label text-muted" for="rememberMe">Remember me</label>
                             </div>
-                            <a href="#" class="text-decoration-none small text-primary-custom fw-bold">Forgot Password?</a>
+                            <a href="forgot_password.php" class="text-decoration-none small text-primary-custom fw-bold">Forgot Password?</a>
                         </div>
 
                         <button type="submit" class="btn btn-primary-custom w-100 py-3 mb-4 fw-bold fs-5">Sign In <i class="fa-solid fa-right-to-bracket ms-2"></i></button>

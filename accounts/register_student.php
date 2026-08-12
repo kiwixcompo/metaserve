@@ -283,7 +283,18 @@ require_once __DIR__ . '/../includes/header.php';
                                         </li>
                                     </ul>
                                     
-                                    <input type="hidden" name="programme_id" id="programme_id" value="1">
+                                    <input type="hidden" name="programme_id" id="programme_id" value="">
+                                    <?php
+                                        // Fetch programme IDs dynamically
+                                        $prog1_id = 1; $prog2_id = 2;
+                                        foreach($programmes as $p) {
+                                            if (stripos($p['name'], 'Mandatory') !== false || stripos($p['name'], 'Digital Literacy') !== false) {
+                                                $prog1_id = $p['id'];
+                                            } else if (stripos($p['name'], 'Professional') !== false) {
+                                                $prog2_id = $p['id'];
+                                            }
+                                        }
+                                    ?>
                                     
                                     <div class="tab-content" id="programmeTabsContent">
                                         <div class="tab-pane fade show active" id="mandatory" role="tabpanel">
@@ -292,7 +303,8 @@ require_once __DIR__ . '/../includes/header.php';
                                             <select name="course_id_mandatory" id="course_id_mandatory" class="form-select clean-form-control course-select">
                                                 <option value="">Choose a course...</option>
                                                 <?php 
-                                                    $stmt1 = $conn->query("SELECT * FROM courses WHERE programme_id = 1 AND is_active = 1 ORDER BY name ASC");
+                                                    $stmt1 = $conn->prepare("SELECT * FROM courses WHERE programme_id = ? AND is_active = 1 ORDER BY name ASC");
+                                                    $stmt1->execute([$prog1_id]);
                                                     while($c = $stmt1->fetch()): 
                                                 ?>
                                                     <option value="<?= $c['id'] ?>"><?= htmlspecialchars($c['name']) ?></option>
@@ -305,7 +317,8 @@ require_once __DIR__ . '/../includes/header.php';
                                             <select name="course_id_professional" id="course_id_professional" class="form-select clean-form-control course-select">
                                                 <option value="">Choose a course...</option>
                                                 <?php 
-                                                    $stmt2 = $conn->query("SELECT * FROM courses WHERE programme_id = 2 AND is_active = 1 ORDER BY name ASC");
+                                                    $stmt2 = $conn->prepare("SELECT * FROM courses WHERE programme_id = ? AND is_active = 1 ORDER BY name ASC");
+                                                    $stmt2->execute([$prog2_id]);
                                                     while($c = $stmt2->fetch()): 
                                                 ?>
                                                     <option value="<?= $c['id'] ?>"><?= htmlspecialchars($c['name']) ?></option>
@@ -313,6 +326,16 @@ require_once __DIR__ . '/../includes/header.php';
                                             </select>
                                         </div>
                                     </div>
+                                    <script>
+                                        // Set default to prog1 on load
+                                        document.addEventListener("DOMContentLoaded", function() {
+                                            document.getElementById('programme_id').value = '<?= $prog1_id ?>';
+                                        });
+                                        
+                                        function setProgramme(type) {
+                                            document.getElementById('programme_id').value = (type === 1) ? '<?= $prog1_id ?>' : '<?= $prog2_id ?>';
+                                        }
+                                    </script>
                                 </div>
 
                                 <div class="col-md-6 mt-5">

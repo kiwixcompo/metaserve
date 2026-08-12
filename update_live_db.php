@@ -8,18 +8,29 @@ $db = new Database();
 $conn = $db->getConnection();
 
 try {
-    // 1. Move all courses to Professional (programme_id = 2) EXCEPT the first 3
-    $conn->query("UPDATE courses SET programme_id = 2 WHERE id NOT IN (1, 2, 3)");
-    echo "<p style='color:green;'>Moved existing courses to Professional category.</p>";
+    // Find the correct IDs dynamically instead of assuming 1 and 2
+    $stmt1 = $conn->query("SELECT id FROM programmes WHERE name LIKE '%Mandatory%' OR name LIKE '%Digital Literacy%' LIMIT 1");
+    $prog1 = $stmt1->fetchColumn();
+
+    $stmt2 = $conn->query("SELECT id FROM programmes WHERE name LIKE '%Professional%' LIMIT 1");
+    $prog2 = $stmt2->fetchColumn();
+
+    if (!$prog1 || !$prog2) {
+        throw new Exception("Could not find the programmes in the database. Ensure they exist.");
+    }
+
+    // 1. Move all courses to Professional EXCEPT the first 3
+    $conn->query("UPDATE courses SET programme_id = $prog2 WHERE id NOT IN (1, 2, 3)");
+    echo "<p style='color:green;'>Moved existing courses to Professional category (ID: $prog2).</p>";
     
     // 2. Check if the 4th mandatory course exists, if not insert it
     $stmt = $conn->query("SELECT id FROM courses WHERE name = 'Computer Hardware and Peripheral Devices'");
     if ($stmt->rowCount() == 0) {
-        $conn->query("INSERT INTO courses (name, programme_id) VALUES ('Computer Hardware and Peripheral Devices', 1)");
+        $conn->query("INSERT INTO courses (name, programme_id) VALUES ('Computer Hardware and Peripheral Devices', $prog1)");
         echo "<p style='color:green;'>Inserted 'Computer Hardware and Peripheral Devices' as Mandatory.</p>";
     } else {
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        $conn->query("UPDATE courses SET programme_id = 1 WHERE id = " . (int)$row['id']);
+        $conn->query("UPDATE courses SET programme_id = $prog1 WHERE id = " . (int)$row['id']);
         echo "<p style='color:green;'>Updated 'Computer Hardware and Peripheral Devices' to Mandatory.</p>";
     }
 

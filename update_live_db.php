@@ -8,20 +8,37 @@ $db = new Database();
 $conn = $db->getConnection();
 
 try {
-    // Find the correct IDs dynamically instead of assuming 1 and 2
-    $stmt1 = $conn->query("SELECT id FROM programmes WHERE name LIKE '%Mandatory%' OR name LIKE '%Digital Literacy%' LIMIT 1");
-    $prog1 = $stmt1->fetchColumn();
+    // We will dynamically ensure the two programmes exist and are named correctly.
+    $stmt = $conn->query("SELECT id FROM programmes ORDER BY id ASC");
+    $ids = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
-    $stmt2 = $conn->query("SELECT id FROM programmes WHERE name LIKE '%Professional%' LIMIT 1");
-    $prog2 = $stmt2->fetchColumn();
-
-    if (!$prog1 || !$prog2) {
-        throw new Exception("Could not find the programmes in the database. Ensure they exist.");
+    if (count($ids) == 0) {
+        // No programmes exist? Insert both.
+        $conn->query("INSERT INTO programmes (name, cost, is_active) VALUES ('Digital Literacy & Computer Appreciation (Mandatory)', 20000, 1)");
+        $prog1 = $conn->lastInsertId();
+        
+        $conn->query("INSERT INTO programmes (name, cost, is_active) VALUES ('Professional Upskilling Programme', 40000, 1)");
+        $prog2 = $conn->lastInsertId();
+    } else if (count($ids) == 1) {
+        // Only one exists. Update it to be Mandatory, insert the second as Professional.
+        $prog1 = $ids[0];
+        $conn->query("UPDATE programmes SET name = 'Digital Literacy & Computer Appreciation (Mandatory)', cost = 20000 WHERE id = $prog1");
+        
+        $conn->query("INSERT INTO programmes (name, cost, is_active) VALUES ('Professional Upskilling Programme', 40000, 1)");
+        $prog2 = $conn->lastInsertId();
+    } else {
+        // Two or more exist. Use the first two.
+        $prog1 = $ids[0];
+        $prog2 = $ids[1];
+        $conn->query("UPDATE programmes SET name = 'Digital Literacy & Computer Appreciation (Mandatory)', cost = 20000 WHERE id = $prog1");
+        $conn->query("UPDATE programmes SET name = 'Professional Upskilling Programme', cost = 40000 WHERE id = $prog2");
     }
+
+    echo "<p style='color:green;'>Programmes ensured and renamed successfully. (Mandatory ID: $prog1, Professional ID: $prog2)</p>";
 
     // 1. Move all courses to Professional EXCEPT the first 3
     $conn->query("UPDATE courses SET programme_id = $prog2 WHERE id NOT IN (1, 2, 3)");
-    echo "<p style='color:green;'>Moved existing courses to Professional category (ID: $prog2).</p>";
+    echo "<p style='color:green;'>Moved existing courses to Professional category.</p>";
     
     // 2. Check if the 4th mandatory course exists, if not insert it
     $stmt = $conn->query("SELECT id FROM courses WHERE name = 'Computer Hardware and Peripheral Devices'");

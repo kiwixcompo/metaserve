@@ -1,14 +1,14 @@
 <?php
-require_once __DIR__ . '/config/config.php';
-require_once __DIR__ . '/src/Controllers/AuthController.php';
+require_once __DIR__ . '/../config/config.php';
 
-// If already logged in, redirect
-if (isset($_SESSION['user_id'])) {
-    header("Location: " . BASE_URL);
+// Only allow Head of Accounts (role_id 2)
+if (!isset($_SESSION['user_id']) || !isset($_SESSION['role_id']) || $_SESSION['role_id'] != 2) {
+    header("Location: " . BASE_URL . "login.php");
     exit();
 }
 
-require_once __DIR__ . '/config/database.php';
+require_once __DIR__ . '/../src/Controllers/AuthController.php';
+require_once __DIR__ . '/../config/database.php';
 $db = new Database();
 $conn = $db->getConnection();
 $stmt = $conn->query("SELECT * FROM departments ORDER BY name ASC");
@@ -24,6 +24,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = $auth->handleRegister($_POST);
     
     if ($result['status'] === 'success') {
+        // Mark user as having purchased a physical form (bypasses the 2k admin charge)
+        $conn->query("UPDATE users SET form_purchased = 1 WHERE id = " . (int)$result['user_id']);
+
         // Handle enrollment
         if (isset($_POST['programme_id'])) {
             $prog_id = $_POST['programme_id'];
@@ -42,13 +45,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
         
-        header("Location: " . $result['redirect']);
+        header("Location: " . BASE_URL . "accounts/register_student.php?success=registered");
         exit;
     } else {
         $errors = $result['errors'];
     }
 }
-require_once __DIR__ . '/includes/header.php';
+require_once __DIR__ . '/../includes/header.php';
 ?>
 
 <style>
@@ -730,4 +733,4 @@ require_once __DIR__ . '/includes/header.php';
 </script>
 <?php endif; ?>
 
-<?php require_once __DIR__ . '/includes/footer.php'; ?>
+<?php require_once __DIR__ . '/../includes/footer.php'; ?>

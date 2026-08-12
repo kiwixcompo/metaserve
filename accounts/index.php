@@ -23,7 +23,10 @@ require_once __DIR__ . '/../includes/header.php';
 ?>
 <section class="py-5 mt-5 bg-light min-vh-100">
     <div class="container">
-        <h2 class="fw-bold text-dark mb-4"><i class="fa-solid fa-file-invoice-dollar text-primary-custom me-2"></i> Accounts Dashboard</h2>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="fw-bold text-dark mb-0"><i class="fa-solid fa-file-invoice-dollar text-primary-custom me-2"></i> Accounts Dashboard</h2>
+            <a href="<?= BASE_URL ?>accounts/register_student.php" class="btn btn-primary-custom fw-bold"><i class="fa-solid fa-user-plus me-2"></i>Register New Student</a>
+        </div>
         
         <?php if (isset($_SESSION['success_msg'])): ?>
             <div class="alert alert-success alert-dismissible fade show border-0"><i class="fa-solid fa-circle-check me-2"></i> <?= htmlspecialchars($_SESSION['success_msg']); unset($_SESSION['success_msg']); ?> <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>

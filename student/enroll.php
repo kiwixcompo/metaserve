@@ -13,7 +13,16 @@ $programmes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 $progDict = array_column($programmes, null, 'id');
 
 // Fetch all active courses
-$stmt = $conn->query("SELECT c.* FROM courses c JOIN programmes p ON c.programme_id = p.id WHERE p.is_active = 1 ORDER BY c.name ASC");
+$type_filter = $_GET['type'] ?? null;
+$query = "SELECT c.* FROM courses c JOIN programmes p ON c.programme_id = p.id WHERE p.is_active = 1";
+$params = [];
+if ($type_filter) {
+    $query .= " AND p.id = ?";
+    $params[] = $type_filter;
+}
+$query .= " ORDER BY c.name ASC";
+$stmt = $conn->prepare($query);
+$stmt->execute($params);
 $allCourses = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selected_item'])) {
@@ -67,7 +76,15 @@ require_once __DIR__ . '/../includes/header.php';
         
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
-                <h2 class="fw-bold text-dark mb-1"><i class="fa-solid fa-graduation-cap text-primary-custom me-2"></i> Enroll in a Course</h2>
+                <?php
+                    $pageTitle = "Enroll in a Course";
+                    if ($type_filter == 1) {
+                        $pageTitle = "Digital Literacy (Mandatory)";
+                    } else if ($type_filter == 2) {
+                        $pageTitle = "Professional Upskilling";
+                    }
+                ?>
+                <h2 class="fw-bold text-dark mb-1"><i class="fa-solid fa-graduation-cap text-primary-custom me-2"></i> <?= $pageTitle ?></h2>
                 <p class="text-muted mb-0">Select a course below to preview its curriculum and enroll.</p>
             </div>
             <a href="index.php" class="btn btn-outline-secondary"><i class="fa-solid fa-arrow-left me-2"></i> Dashboard</a>
@@ -108,16 +125,16 @@ require_once __DIR__ . '/../includes/header.php';
                     $admin_charge = ($form_purchased) ? 0 : 2000;
                     $total_to_pay = $prog_fee + $admin_charge;
             ?>
-                <div class="col-md-6 col-lg-4 course-item" data-name="<?= strtolower(htmlspecialchars($course['name'])) ?>" data-desc="<?= strtolower(htmlspecialchars($course['description'])) ?>">
+                <div class="col-md-6 col-lg-4 course-item" data-name="<?= strtolower(htmlspecialchars($course['name'] ?? '')) ?>" data-desc="<?= strtolower(htmlspecialchars($course['description'] ?? '')) ?>">
                     <div class="prog-card p-4 h-100 d-flex flex-column" data-bs-toggle="modal" data-bs-target="#previewModal<?= $course['id'] ?>">
                         <div class="prog-icon"><i class="fa-solid fa-laptop-code"></i></div>
-                        <h5 class="fw-bold text-dark mb-2"><?= htmlspecialchars($course['name']) ?></h5>
+                        <h5 class="fw-bold text-dark mb-2"><?= htmlspecialchars($course['name'] ?? '') ?></h5>
                         <p class="text-muted small flex-grow-1" style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
-                            <?= htmlspecialchars($course['description']) ?>
+                            <?= htmlspecialchars($course['description'] ?? '') ?>
                         </p>
                         
                         <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top" style="min-width: 0;">
-                            <span class="badge bg-light text-dark text-truncate w-100 text-start" title="<?= htmlspecialchars($parentProg['name']) ?>"><i class="fa-solid fa-layer-group me-1"></i> <?= htmlspecialchars($parentProg['name']) ?></span>
+                            <span class="badge bg-light text-dark text-truncate w-100 text-start" title="<?= htmlspecialchars($parentProg['name'] ?? '') ?>"><i class="fa-solid fa-layer-group me-1"></i> <?= htmlspecialchars($parentProg['name'] ?? '') ?></span>
                         </div>
                         
                         <button class="btn btn-primary-custom w-100 mt-3 fw-bold">Preview & Enroll</button>
@@ -129,14 +146,14 @@ require_once __DIR__ . '/../includes/header.php';
                   <div class="modal-dialog modal-dialog-centered modal-lg">
                     <div class="modal-content border-0 shadow-lg" style="border-radius: 15px; overflow: hidden;">
                       <div class="modal-header bg-light border-0 p-4">
-                        <h4 class="modal-title fw-bold text-dark" id="exampleModalLabel"><?= htmlspecialchars($course['name']) ?></h4>
+                        <h4 class="modal-title fw-bold text-dark" id="exampleModalLabel"><?= htmlspecialchars($course['name'] ?? '') ?></h4>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                       </div>
                       <div class="modal-body p-4">
                         
                         <div class="mb-4">
                             <h6 class="fw-bold text-primary-custom text-uppercase mb-2">About This Skill</h6>
-                            <p class="text-muted" style="line-height: 1.6; font-size: 1.05rem;"><?= nl2br(htmlspecialchars($course['description'])) ?></p>
+                            <p class="text-muted" style="line-height: 1.6; font-size: 1.05rem;"><?= nl2br(htmlspecialchars($course['description'] ?? '')) ?></p>
                         </div>
                         
                         <div class="d-flex gap-3 mb-4">
@@ -153,7 +170,7 @@ require_once __DIR__ . '/../includes/header.php';
                         </div>
 
                         <div class="alert alert-info border-0">
-                            <i class="fa-solid fa-circle-info me-2"></i> This skill is part of the <strong><?= htmlspecialchars($parentProg['name']) ?></strong>. The enrollment fee covers your full participation.
+                            <i class="fa-solid fa-circle-info me-2"></i> This skill is part of the <strong><?= htmlspecialchars($parentProg['name'] ?? '') ?></strong>. The enrollment fee covers your full participation.
                         </div>
 
                       </div>

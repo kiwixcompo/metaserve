@@ -49,3 +49,97 @@ Stack trace:
 [03-Aug-2026 13:26:40 UTC] PHP   1. {main}() C:\wamp64\www\metaserve\payment.php:0
 [03-Aug-2026 13:26:40 UTC] PHP   2. PaymentController->initializePaystack($email = 'student@metaserve.com', $amount = 20000, $enrollment_id = 6, $user_id = 6) C:\wamp64\www\metaserve\payment.php:53
 [12-Aug-2026 11:23:34 UTC] Email sending failed to smith@row.com. Error: SMTP Error: Could not connect to SMTP host. Failed to connect to server SMTP server error: Failed to connect to server Additional SMTP info: php_network_getaddresses: getaddrinfo for mail.metaserve.com.ng failed: No such host is known. 
+[12-Aug-2026 14:50:02 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'is_active' in 'where clause' in C:\wamp64\www\metaserve\register.php:304
+Stack trace:
+#0 C:\wamp64\www\metaserve\register.php(304): PDOStatement->execute(Array)
+#1 {main}
+  thrown in C:\wamp64\www\metaserve\register.php on line 304
+[12-Aug-2026 14:52:22 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'is_active' in 'where clause' in C:\wamp64\www\metaserve\register.php:304
+Stack trace:
+#0 C:\wamp64\www\metaserve\register.php(304): PDOStatement->execute(Array)
+#1 {main}
+  thrown in C:\wamp64\www\metaserve\register.php on line 304
+[12-Aug-2026 14:52:27 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'is_active' in 'where clause' in C:\wamp64\www\metaserve\register.php:304
+Stack trace:
+#0 C:\wamp64\www\metaserve\register.php(304): PDOStatement->execute(Array)
+#1 {main}
+  thrown in C:\wamp64\www\metaserve\register.php on line 304
+[12-Aug-2026 14:54:12 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'is_active' in 'where clause' in C:\wamp64\www\metaserve\register.php:304
+Stack trace:
+#0 C:\wamp64\www\metaserve\register.php(304): PDOStatement->execute(Array)
+#1 {main}
+  thrown in C:\wamp64\www\metaserve\register.php on line 304
+[12-Aug-2026 14:54:16 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'is_active' in 'where clause' in C:\wamp64\www\metaserve\register.php:304
+Stack trace:
+#0 C:\wamp64\www\metaserve\register.php(304): PDOStatement->execute(Array)
+#1 {main}
+  thrown in C:\wamp64\www\metaserve\register.php on line 304
+[12-Aug-2026 14:57:28 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'is_active' in 'where clause' in C:\wamp64\www\metaserve\register.php:304
+Stack trace:
+#0 C:\wamp64\www\metaserve\register.php(304): PDOStatement->execute(Array)
+#1 {main}
+  thrown in C:\wamp64\www\metaserve\register.php on line 304
+[12-Aug-2026 14:57:42 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'is_active' in 'where clause' in C:\wamp64\www\metaserve\register.php:304
+Stack trace:
+#0 C:\wamp64\www\metaserve\register.php(304): PDOStatement->execute(Array)
+#1 {main}
+  thrown in C:\wamp64\www\metaserve\register.php on line 304
+[12-Aug-2026 14:58:06 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'is_active' in 'where clause' in C:\wamp64\www\metaserve\register.php:304
+Stack trace:
+#0 C:\wamp64\www\metaserve\register.php(304): PDOStatement->execute(Array)
+#1 {main}
+  thrown in C:\wamp64\www\metaserve\register.php on line 304
+[12-Aug-2026 14:58:14 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'is_active' in 'where clause' in C:\wamp64\www\metaserve\register.php:304
+Stack trace:
+#0 C:\wamp64\www\metaserve\register.php(304): PDOStatement->execute(Array)
+#1 {main}
+  thrown in C:\wamp64\www\metaserve\register.php on line 304
+[12-Aug-2026 15:10:21 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'is_active' in 'where clause' in C:\wamp64\www\metaserve\register.php:304
+Stack trace:
+#0 C:\wamp64\www\metaserve\register.php(304): PDOStatement->execute(Array)
+#1 {main}
+  thrown in C:\wamp64\www\metaserve\register.php on line 304
+[12-Aug-2026 18:47:28 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'is_active' in 'where clause' in C:\wamp64\www\metaserve\register.php:304
+Stack trace:
+#0 C:\wamp64\www\metaserve\register.php(304): PDOStatement->execute(Array)
+#1 {main}
+  thrown in C:\wamp64\www\metaserve\register.php on line 304
+[12-Aug-2026 18:57:56 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'is_active' in 'where clause' in C:\wamp64\www\metaserve\register.php:304
+Stack trace:
+#0 C:\wamp64\www\metaserve\register.php(304): PDOStatement->execute(Array)
+#1 {main}
+  thrown in C:\wamp64\www\metaserve\register.php on line 304
+[12-Aug-2026 18:59:20 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'is_active' in 'where clause' in C:\wamp64\www\metaserve\register.php:304
+Stack trace:
+#0 C:\wamp64\www\metaserve\register.php(304): PDOStatement->execute(Array)
+#1 {main}
+  thrown in C:\wamp64\www\metaserve\register.php on line 304
+[12-Aug-2026 19:01:57 UTC] PHP Warning:  require_once(C:\wamp64\www\metaserve/src/Models/Course.php): Failed to open stream: No such file or directory in C:\wamp64\www\metaserve\register.php on line 12
+[12-Aug-2026 19:01:57 UTC] PHP Stack trace:
+[12-Aug-2026 19:01:57 UTC] PHP   1. {main}() C:\wamp64\www\metaserve\register.php:0
+[12-Aug-2026 19:01:57 UTC] PHP Fatal error:  Uncaught Error: Failed opening required 'C:\wamp64\www\metaserve/src/Models/Course.php' (include_path='.;C:\php\pear') in C:\wamp64\www\metaserve\register.php:12
+Stack trace:
+#0 {main}
+  thrown in C:\wamp64\www\metaserve\register.php on line 12
+[12-Aug-2026 19:04:54 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'is_active' in 'where clause' in C:\wamp64\www\metaserve\register.php:304
+Stack trace:
+#0 C:\wamp64\www\metaserve\register.php(304): PDOStatement->execute(Array)
+#1 {main}
+  thrown in C:\wamp64\www\metaserve\register.php on line 304
+[12-Aug-2026 19:05:29 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'is_active' in 'where clause' in C:\wamp64\www\metaserve\register.php:304
+Stack trace:
+#0 C:\wamp64\www\metaserve\register.php(304): PDOStatement->execute(Array)
+#1 {main}
+  thrown in C:\wamp64\www\metaserve\register.php on line 304
+[12-Aug-2026 19:36:47 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\wamp64\www\metaserve\student\enroll.php on line 128
+[12-Aug-2026 19:36:47 UTC] PHP Stack trace:
+[12-Aug-2026 19:36:47 UTC] PHP   1. {main}() C:\wamp64\www\metaserve\student\enroll.php:0
+[12-Aug-2026 19:36:47 UTC] PHP   2. htmlspecialchars($string = NULL) C:\wamp64\www\metaserve\student\enroll.php:128
+[12-Aug-2026 19:36:47 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\wamp64\www\metaserve\student\enroll.php on line 133
+[12-Aug-2026 19:36:47 UTC] PHP Stack trace:
+[12-Aug-2026 19:36:47 UTC] PHP   1. {main}() C:\wamp64\www\metaserve\student\enroll.php:0
+[12-Aug-2026 19:36:47 UTC] PHP   2. htmlspecialchars($string = NULL) C:\wamp64\www\metaserve\student\enroll.php:133
+[12-Aug-2026 19:36:47 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\wamp64\www\metaserve\student\enroll.php on line 156
+[12-Aug-2026 19:36:47 UTC] PHP Stack trace:
+[12-Aug-2026 19:36:47 UTC] PHP   1. {main}() C:\wamp64\www\metaserve\student\enroll.php:0
+[12-Aug-2026 19:36:47 UTC] PHP   2. htmlspecialchars($string = NULL) C:\wamp64\www\metaserve\student\enroll.php:156

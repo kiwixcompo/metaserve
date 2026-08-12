@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Digital Skills Portal for Metaserve Info Tech Ltd - Bridging the gap in digital literacy.">
+    <title>Digital Skills Portal - Metaserve Info Tech Ltd</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="http://localhost/metaserve/assets/images/logo.png" type="image/png">
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="http://localhost/metaserve/assets/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="http://localhost/metaserve/assets/css/style.css">
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-custom fixed-top">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="http://localhost/metaserve/">
+            <img src="http://localhost/metaserve/assets/images/logo.png" alt="Metaserve Logo" onerror="this.src='https://via.placeholder.com/40x40?text=M';">
+            <div class="d-flex flex-column ms-2">
+                <span class="fs-5 fw-bold" style="line-height: 1.2;">Metaserve Info Tech</span>
+                <span style="font-size: 0.75rem; color: #6c757d; font-weight: normal; margin-top: 2px;">The Hackathon Hub</span>
+            </div>
+        </a>
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
+                <li class="nav-item"><a class="nav-link px-3" href="http://localhost/metaserve/">Home</a></li>
+                <li class="nav-item"><a class="nav-link px-3" href="http://localhost/metaserve/about.php">About</a></li>
+                <li class="nav-item"><a class="nav-link px-3" href="http://localhost/metaserve/courses.php">Courses</a></li>
+                <li class="nav-item"><a class="nav-link px-3" href="http://localhost/metaserve/contact.php">Contact</a></li>
+                                    <li class="nav-item ms-lg-3"><a class="btn btn-outline-custom btn-sm px-4 py-2 me-2" href="http://localhost/metaserve/login.php">Login</a></li>
+                    <li class="nav-item"><a class="btn btn-primary-custom btn-sm px-4 py-2" href="http://localhost/metaserve/register.php">Register Now</a></li>
+                            </ul>
+        </div>
+    </div>
+</nav>
+
+<style>
+    .step-indicator { width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; background: #e5e7eb; color: #6b7280; font-weight: bold; margin-right: 10px; transition: all 0.3s; border: 2px solid transparent; }
+    .step-active { background: var(--primary-color); color: white; box-shadow: 0 0 15px rgba(30, 86, 49, 0.3); }
+    .form-step { display: none; }
+    .form-step.active { display: block; animation: fadeIn 0.4s ease-out forwards; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+    .form-control.clean-form-control, .form-select.clean-form-control { border-radius: 8px; border: 1px solid #d1d5db; padding: 10px 15px; }
+    .form-control.clean-form-control:focus, .form-select.clean-form-control:focus { border-color: var(--primary-color); box-shadow: 0 0 0 0.25rem rgba(30, 86, 49, 0.25); }
+    .btn-primary-custom { background-color: var(--primary-color); border-color: var(--primary-color); color: white; border-radius: 8px; }
+    .btn-primary-custom:hover { background-color: var(--secondary-color); border-color: var(--secondary-color); }
+</style>
+
+<section class="py-5 mt-5" style="background: linear-gradient(135deg, rgba(30,86,49,0.03) 0%, rgba(118,186,27,0.05) 100%); min-height: 85vh;">
+    <div class="container py-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="clean-card p-4 p-md-5 bg-white shadow-sm" style="border-radius: 15px; border-top: 5px solid var(--primary-color);">
+                    <div class="text-center mb-4">
+                        <img src="http://localhost/metaserve/assets/images/logo.png" alt="Logo" style="height: 60px; margin-bottom: 20px;">
+                        <h2 class="text-dark fw-bold mb-1">STUDENTS' ICT SKILLS LIBERATION PROGRAMME</h2>
+                        <h4 class="text-muted fw-bold">REGISTRATION FORM</h4>
+                        <p class="text-muted small mt-2">A collaborative initiative between Metaserve Info Tech Ltd and Taraba State University, Jalingo.</p>
+                    </div>
+
+                    
+                    
+                    <!-- Step Indicators -->
+                    <div class="d-flex justify-content-between mb-5 position-relative px-2 px-md-5">
+                        <div class="position-absolute w-100" style="height: 2px; background: #e5e7eb; z-index: 0; top: 20px; left: 0;"></div>
+                        
+                        <div class="text-center position-relative z-1" style="background: #fff; padding: 0 10px; cursor: pointer;" onclick="goToStep(1)">
+                            <div class="step-indicator step-active" id="ind-1">1</div>
+                            <div class="mt-2 d-none d-sm-block text-dark small fw-bold">Personal</div>
+                        </div>
+                        <div class="text-center position-relative z-1" style="background: #fff; padding: 0 10px; cursor: pointer;" onclick="goToStep(2)">
+                            <div class="step-indicator" id="ind-2">2</div>
+                            <div class="mt-2 d-none d-sm-block text-muted small fw-bold">Academic</div>
+                        </div>
+                        <div class="text-center position-relative z-1" style="background: #fff; padding: 0 10px; cursor: pointer;" onclick="goToStep(3)">
+                            <div class="step-indicator" id="ind-3">3</div>
+                            <div class="mt-2 d-none d-sm-block text-muted small fw-bold">Programme</div>
+                        </div>
+                        <div class="text-center position-relative z-1" style="background: #fff; padding: 0 10px; cursor: pointer;" onclick="goToStep(4)">
+                            <div class="step-indicator" id="ind-4">4</div>
+                            <div class="mt-2 d-none d-sm-block text-muted small fw-bold">Additional</div>
+                        </div>
+                    </div>
+
+                    <form id="registerForm" method="POST" action="register.php">
+                        
+                        <div class="text-center mb-4 p-3 rounded" style="background: var(--primary-color); color: white;">
+                            <h6 class="mb-2 fw-bold">PLEASE SELECT APPLICANT CATEGORY</h6>
+                            <div class="d-flex justify-content-center gap-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="type" id="typeTSU" value="tsu_student" onclick="toggleCategoryFields(this.value)">
+                                    <label class="form-check-label fw-bold" for="typeTSU">TSU STUDENT (Taraba State University)</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="type" id="typeExt" value="external" onclick="toggleCategoryFields(this.value)">
+                                    <label class="form-check-label fw-bold" for="typeExt">EXTERNAL CANDIDATE (Non-TSU Student)</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Full form container, hidden until category is selected -->
+                        <div id="fullFormContainer" style="display: none;">
+
+                        <!-- STEP 1: Personal Info -->
+                        <div class="form-step active" id="step-1">
+                            <h5 class="text-white p-2 rounded mb-4 fw-bold" style="background: var(--primary-color);">1. PERSONAL INFORMATION</h5>
+                            
+                            <div class="row gy-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Full Name (as in your ID) *</label>
+                                    <input type="text" name="full_name" class="form-control clean-form-control" required placeholder="John Doe">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Date of Birth *</label>
+                                    <input type="date" name="dob" class="form-control clean-form-control" required>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold d-block">Gender *</label>
+                                    <div class="form-check form-check-inline mt-2">
+                                        <input class="form-check-input" type="radio" name="gender" id="genderM" value="Male" required>
+                                        <label class="form-check-label" for="genderM">Male</label>
+                                    </div>
+                                    <div class="form-check form-check-inline mt-2">
+                                        <input class="form-check-input" type="radio" name="gender" id="genderF" value="Female" required>
+                                        <label class="form-check-label" for="genderF">Female</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="form-label fw-bold">Nationality *</label>
+                                    <select name="nationality" id="nationality" class="form-select clean-form-control" required onchange="toggleNigerianFields()">
+                                        <option value="">Select Nationality...</option>
+                                        <option value="Nigerian">Nigerian</option>
+                                        <option value="Non-Nigerian">Non-Nigerian</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-6 nigerian-only" style="display:none;">
+                                    <label class="form-label fw-bold">State of Origin *</label>
+                                    <select name="state_of_origin" id="state_of_origin" class="form-select clean-form-control" onchange="populateLGA()">
+                                        <option value="">Select State...</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 nigerian-only" style="display:none;">
+                                    <label class="form-label fw-bold">Local Government Area *</label>
+                                    <select name="lga" id="lga" class="form-select clean-form-control">
+                                        <option value="">Select LGA...</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Phone Number *</label>
+                                    <input type="tel" name="phone" class="form-control clean-form-control" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Alternative Phone Number</label>
+                                    <input type="tel" name="alt_phone" class="form-control clean-form-control">
+                                </div>
+
+                                <div class="col-md-12">
+                                    <label class="form-label fw-bold">Email Address *</label>
+                                    <input type="email" name="email" class="form-control clean-form-control" required>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Password *</label>
+                                    <input type="password" name="password" id="password" class="form-control clean-form-control" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Confirm Password *</label>
+                                    <input type="password" id="confirm_password" class="form-control clean-form-control" required>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-end mt-4">
+                                <button type="button" class="btn btn-primary-custom px-5 py-2" onclick="nextStep(2)">Next <i class="fa-solid fa-arrow-right ms-2"></i></button>
+                            </div>
+                        </div>
+
+                        <!-- STEP 2: Academic Info -->
+                        <div class="form-step" id="step-2">
+                            <h5 class="text-white p-2 rounded mb-4 fw-bold" style="background: var(--primary-color);">2. ACADEMIC / BACKGROUND INFORMATION</h5>
+                            
+                            <!-- TSU Student Fields -->
+                            <div id="tsuFields" class="row gy-3">
+                                <h6 class="fw-bold text-success mb-2 border-bottom pb-2">For TSU Students:</h6>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Matriculation Number *</label>
+                                    <input type="text" name="reg_number" id="reg_number" class="form-control clean-form-control">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Department *</label>
+                                    <select name="department_id" id="department_id" class="form-select clean-form-control">
+                                        <option value="">Select Department...</option>
+                                                                                    <option value="23">B.A. African Traditional Religion (FACULTY OF ARTS)</option>
+                                                                                    <option value="16">B.A. Arabic (FACULTY OF ARTS)</option>
+                                                                                    <option value="14">B.A. Christian Religious Studies (FACULTY OF ARTS)</option>
+                                                                                    <option value="20">B.A. Christian Theology (FACULTY OF ARTS)</option>
+                                                                                    <option value="24">B.A. Classics (FACULTY OF ARTS)</option>
+                                                                                    <option value="17">B.A. English &amp; Literary Studies (FACULTY OF ARTS)</option>
+                                                                                    <option value="13">B.A. French (FACULTY OF ARTS)</option>
+                                                                                    <option value="18">B.A. History &amp; Diplomatic Studies (FACULTY OF ARTS)</option>
+                                                                                    <option value="15">B.A. Islamic Studies (FACULTY OF ARTS)</option>
+                                                                                    <option value="12">B.A. Languages &amp; Linguistics (FACULTY OF ARTS)</option>
+                                                                                    <option value="21">B.A. Philosophy (FACULTY OF ARTS)</option>
+                                                                                    <option value="22">B.A. Religious Studies (FACULTY OF ARTS)</option>
+                                                                                    <option value="19">B.A. Sharia (FACULTY OF ARTS)</option>
+                                                                                    <option value="11">B.A. Theatre Arts (FACULTY OF ARTS)</option>
+                                                                                    <option value="61">B.Ed. Educational Administration (FACULTY OF EDUCATION)</option>
+                                                                                    <option value="57">B.Ed. Entrepreneurship (FACULTY OF EDUCATION)</option>
+                                                                                    <option value="62">B.Ed. Guidance and Counselling (FACULTY OF EDUCATION)</option>
+                                                                                    <option value="60">B.Ed. Health Education (FACULTY OF EDUCATION)</option>
+                                                                                    <option value="59">B.Ed. Human Kinetics (FACULTY OF EDUCATION)</option>
+                                                                                    <option value="56">B.Ed. Special Needs Education (FACULTY OF EDUCATION)</option>
+                                                                                    <option value="58">B.Ed. Sustainable Development Studies (FACULTY OF EDUCATION)</option>
+                                                                                    <option value="4">B.Eng. Agricultural &amp; Bio-Resources Engineering (FACULTY OF ENGINEERING)</option>
+                                                                                    <option value="3">B.Eng. Civil Engineering (FACULTY OF ENGINEERING)</option>
+                                                                                    <option value="1">B.Eng. Electrical/Electronic Engineering (FACULTY OF ENGINEERING)</option>
+                                                                                    <option value="2">B.Eng. Mechanical Engineering (FACULTY OF ENGINEERING)</option>
+                                                                                    <option value="63">B.LIS. Library and Information Science (FACULTY OF EDUCATION)</option>
+                                                                                    <option value="38">B.MLS. Medical Laboratory Science (FACULTY OF HEALTH SCIENCES)</option>
+                                                                                    <option value="36">B.NSc. Nursing Science (FACULTY OF HEALTH SCIENCES)</option>
+                                                                                    <option value="34">B.RAD. Radiology (FACULTY OF HEALTH SCIENCES)</option>
+                                                                                    <option value="41">B.Sc. Accounting (FACULTY OF MANAGEMENT AND SOCIAL SCIENCES)</option>
+                                                                                    <option value="25">B.Sc. Advertisement (FACULTY OF COMMUNICATION AND MEDIA STUDIES)</option>
+                                                                                    <option value="10">B.Sc. Agricultural Economics (FACULTY OF AGRICULTURE)</option>
+                                                                                    <option value="8">B.Sc. Agricultural Economics &amp; Extension (FACULTY OF AGRICULTURE)</option>
+                                                                                    <option value="7">B.Sc. Animal Science (FACULTY OF AGRICULTURE)</option>
+                                                                                    <option value="39">B.Sc. Banking and Finance (FACULTY OF MANAGEMENT AND SOCIAL SCIENCES)</option>
+                                                                                    <option value="54">B.Sc. Biochemistry (FACULTY OF SCIENCE)</option>
+                                                                                    <option value="26">B.Sc. Broadcasting (FACULTY OF COMMUNICATION AND MEDIA STUDIES)</option>
+                                                                                    <option value="42">B.Sc. Business Administration (FACULTY OF MANAGEMENT AND SOCIAL SCIENCES)</option>
+                                                                                    <option value="53">B.Sc. Chemistry (FACULTY OF SCIENCE)</option>
+                                                                                    <option value="49">B.Sc. Computer Science (FACULTY OF SCIENCE)</option>
+                                                                                    <option value="6">B.Sc. Crop Production (FACULTY OF AGRICULTURE)</option>
+                                                                                    <option value="29">B.Sc. Data Science (FACULTY OF COMPUTING)</option>
+                                                                                    <option value="40">B.Sc. Economics (FACULTY OF MANAGEMENT AND SOCIAL SCIENCES)</option>
+                                                                                    <option value="35">B.Sc. Environmental Health (FACULTY OF HEALTH SCIENCES)</option>
+                                                                                    <option value="46">B.Sc. Geography (FACULTY OF MANAGEMENT AND SOCIAL SCIENCES)</option>
+                                                                                    <option value="9">B.Sc. Home Economics (FACULTY OF AGRICULTURE)</option>
+                                                                                    <option value="32">B.Sc. Human Anatomy (FACULTY OF HEALTH SCIENCES)</option>
+                                                                                    <option value="33">B.Sc. Human Physiology (FACULTY OF HEALTH SCIENCES)</option>
+                                                                                    <option value="30">B.Sc. Information and Communication Technology (FACULTY OF COMPUTING)</option>
+                                                                                    <option value="27">B.Sc. Journalism &amp; Media Studies (FACULTY OF COMMUNICATION AND MEDIA STUDIES)</option>
+                                                                                    <option value="51">B.Sc. Mathematics (FACULTY OF SCIENCE)</option>
+                                                                                    <option value="47">B.Sc. Meteorology &amp; Climate Studies (FACULTY OF SCIENCE)</option>
+                                                                                    <option value="55">B.Sc. Microbiology (FACULTY OF SCIENCE)</option>
+                                                                                    <option value="52">B.Sc. Physics (FACULTY OF SCIENCE)</option>
+                                                                                    <option value="43">B.Sc. Political Science (FACULTY OF MANAGEMENT AND SOCIAL SCIENCES)</option>
+                                                                                    <option value="44">B.Sc. Public Administration (FACULTY OF MANAGEMENT AND SOCIAL SCIENCES)</option>
+                                                                                    <option value="37">B.Sc. Public Health (FACULTY OF HEALTH SCIENCES)</option>
+                                                                                    <option value="28">B.Sc. Public Relations (FACULTY OF COMMUNICATION AND MEDIA STUDIES)</option>
+                                                                                    <option value="45">B.Sc. Sociology (FACULTY OF MANAGEMENT AND SOCIAL SCIENCES)</option>
+                                                                                    <option value="31">B.Sc. Software Engineering (FACULTY OF COMPUTING)</option>
+                                                                                    <option value="5">B.Sc. Soil Science (FACULTY OF AGRICULTURE)</option>
+                                                                                    <option value="50">B.Sc. Statistics (FACULTY OF SCIENCE)</option>
+                                                                                    <option value="48">B.Sc. Survey &amp; Geo-Informatics (FACULTY OF SCIENCE)</option>
+                                                                                    <option value="64">LL.B. Law (FACULTY OF LAW)</option>
+                                                                            </select>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="form-label fw-bold d-block">Level *</label>
+                                                                                                                <div class="form-check form-check-inline mt-2">
+                                            <input class="form-check-input tsu-level" type="radio" name="level" id="lvl100" value="100">
+                                            <label class="form-check-label" for="lvl100">100</label>
+                                        </div>
+                                                                            <div class="form-check form-check-inline mt-2">
+                                            <input class="form-check-input tsu-level" type="radio" name="level" id="lvl200" value="200">
+                                            <label class="form-check-label" for="lvl200">200</label>
+                                        </div>
+                                                                            <div class="form-check form-check-inline mt-2">
+                                            <input class="form-check-input tsu-level" type="radio" name="level" id="lvl300" value="300">
+                                            <label class="form-check-label" for="lvl300">300</label>
+                                        </div>
+                                                                            <div class="form-check form-check-inline mt-2">
+                                            <input class="form-check-input tsu-level" type="radio" name="level" id="lvl400" value="400">
+                                            <label class="form-check-label" for="lvl400">400</label>
+                                        </div>
+                                                                            <div class="form-check form-check-inline mt-2">
+                                            <input class="form-check-input tsu-level" type="radio" name="level" id="lvl500" value="500">
+                                            <label class="form-check-label" for="lvl500">500</label>
+                                        </div>
+                                                                            <div class="form-check form-check-inline mt-2">
+                                            <input class="form-check-input tsu-level" type="radio" name="level" id="lvlPG" value="PG">
+                                            <label class="form-check-label" for="lvlPG">PG</label>
+                                        </div>
+                                                                    </div>
+                            </div>
+
+                            <!-- External Candidate Fields -->
+                            <div id="extFields" class="row gy-3" style="display: none;">
+                                <h6 class="fw-bold text-primary mb-2 border-bottom pb-2">For External Candidates:</h6>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Highest Qualification *</label>
+                                    <input type="text" name="highest_qualification" id="highest_qualification" class="form-control clean-form-control">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Occupation / Profession *</label>
+                                    <input type="text" name="occupation" id="occupation" class="form-control clean-form-control">
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-between mt-4">
+                                <button type="button" class="btn btn-outline-secondary px-5 py-2" onclick="prevStep(1)"><i class="fa-solid fa-arrow-left me-2"></i> Back</button>
+                                <button type="button" class="btn btn-primary-custom px-5 py-2" onclick="nextStep(3)">Next <i class="fa-solid fa-arrow-right ms-2"></i></button>
+                            </div>
+                        </div>
+
+                        <!-- STEP 3: Programme Selection -->
+                        <div class="form-step" id="step-3">
+                            <h5 class="text-white p-2 rounded mb-4 fw-bold" style="background: var(--primary-color);">3. PROGRAMME & COURSE SELECTION</h5>
+                            
+                            <div class="row gy-4">
+                                <div class="col-md-12">
+                                    <label class="form-label fw-bold mb-3">Choose Programme Type *</label>
+                                    
+                                    <ul class="nav nav-pills nav-fill gap-2 p-1 bg-light border rounded-pill mb-4" id="programmeTabs" role="tablist">
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link active rounded-pill fw-bold" id="mandatory-tab" data-bs-toggle="tab" data-bs-target="#mandatory" type="button" role="tab" onclick="setProgramme(1)">Digital Literacy (Mandatory)</button>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link rounded-pill fw-bold" id="professional-tab" data-bs-toggle="tab" data-bs-target="#professional" type="button" role="tab" onclick="setProgramme(2)">Professional Upskilling</button>
+                                        </li>
+                                    </ul>
+                                    
+                                    <input type="hidden" name="programme_id" id="programme_id" value="">
+                                                                        
+                                    <div class="tab-content" id="programmeTabsContent">
+                                        <div class="tab-pane fade show active" id="mandatory" role="tabpanel">
+                                            <div class="alert alert-info border-0 shadow-sm" style="background-color: rgba(13, 110, 253, 0.1); color: #084298;"><i class="fa-solid fa-circle-info me-2"></i> Mandatory courses for TSU students. Cost is calculated at checkout.</div>
+                                            <label class="form-label fw-bold">Select Mandatory Course *</label>
+                                            <select name="course_id_mandatory" id="course_id_mandatory" class="form-select clean-form-control course-select">
+                                                <option value="">Choose a course...</option>
+                                                <br />
+<font size='1'><table class='xdebug-error xe-uncaught-exception' dir='ltr' border='1' cellspacing='0' cellpadding='1'>
+<tr><th align='left' bgcolor='#f57900' colspan="5"><span style='background-color: #cc0000; color: #fce94f; font-size: x-large;'>( ! )</span> Fatal error: Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'is_active' in 'where clause' in C:\wamp64\www\metaserve\register.php on line <i>304</i></th></tr>
+<tr><th align='left' bgcolor='#f57900' colspan="5"><span style='background-color: #cc0000; color: #fce94f; font-size: x-large;'>( ! )</span> PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'is_active' in 'where clause' in C:\wamp64\www\metaserve\register.php on line <i>304</i></th></tr>
+<tr><th align='left' bgcolor='#e9b96e' colspan='5'>Call Stack</th></tr>
+<tr><th align='center' bgcolor='#eeeeec'>#</th><th align='left' bgcolor='#eeeeec'>Time</th><th align='left' bgcolor='#eeeeec'>Memory</th><th align='left' bgcolor='#eeeeec'>Function</th><th align='left' bgcolor='#eeeeec'>Location</th></tr>
+<tr><td bgcolor='#eeeeec' align='center'>1</td><td bgcolor='#eeeeec' align='center'>0.0020</td><td bgcolor='#eeeeec' align='right'>498576</td><td bgcolor='#eeeeec'>{main}(  )</td><td title='C:\wamp64\www\metaserve\register.php' bgcolor='#eeeeec'>...\register.php<b>:</b>0</td></tr>
+<tr><td bgcolor='#eeeeec' align='center'>2</td><td bgcolor='#eeeeec' align='center'>0.0057</td><td bgcolor='#eeeeec' align='right'>650120</td><td bgcolor='#eeeeec'><a href='http://www.php.net/PDOStatement.execute' target='_new'>execute</a>( <span>$params = </span><span>[0 =&gt; 1]</span> )</td><td title='C:\wamp64\www\metaserve\register.php' bgcolor='#eeeeec'>...\register.php<b>:</b>304</td></tr>
+</table></font>

@@ -59,7 +59,7 @@ require_once __DIR__ . '/../includes/header.php';
                 <div class="clean-card p-4 mb-4">
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <h5 class="fw-bold text-dark mb-0"><i class="fa-solid fa-book-open me-2 text-secondary-custom"></i> My Learning Path</h5>
-                        <a href="<?= BASE_URL ?>student/enroll.php" class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-plus me-1"></i> Enroll in New Course</a>
+                        <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#enrollModal"><i class="fa-solid fa-plus me-1"></i> Enroll in New Course</button>
                     </div>
                     
                     <?php if (isset($_SESSION['success_msg'])): ?>
@@ -101,7 +101,7 @@ require_once __DIR__ . '/../includes/header.php';
                         <div class="text-center py-4">
                             <i class="fa-solid fa-graduation-cap text-muted fs-1 mb-3 opacity-50"></i>
                             <p class="text-muted">You have not enrolled in any programmes yet.</p>
-                            <a href="<?= BASE_URL ?>student/enroll.php" class="btn btn-primary-custom">Enroll Now</a>
+                            <button type="button" class="btn btn-primary-custom" data-bs-toggle="modal" data-bs-target="#enrollModal">Enroll Now</button>
                         </div>
                     <?php endif; ?>
                 </div>
@@ -117,4 +117,49 @@ require_once __DIR__ . '/../includes/header.php';
         </div>
     </div>
 </section>
+
+<!-- Enroll Modal -->
+<div class="modal fade" id="enrollModal" tabindex="-1" aria-labelledby="enrollModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg" style="border-radius: 15px;">
+      <div class="modal-header border-0 pb-0">
+        <h5 class="modal-title fw-bold" id="enrollModalLabel">Choose Programme Type</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-4">
+        <p class="text-muted mb-4">Select the type of programme you would like to enroll in.</p>
+        <div class="row g-4">
+            <!-- Mandatory Courses -->
+            <div class="col-md-6">
+                <div class="card h-100 border-0 shadow-sm" style="background: rgba(13, 110, 253, 0.05); border-radius: 12px; transition: transform 0.2s;">
+                    <div class="card-body text-center p-4">
+                        <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px; background: rgba(13, 110, 253, 0.1); color: #0d6efd;">
+                            <i class="fa-solid fa-laptop fs-3"></i>
+                        </div>
+                        <h5 class="fw-bold text-dark">Digital Literacy (Mandatory)</h5>
+                        <p class="text-muted small mb-4">These courses are designed for those who want to build a strong foundation and have basic computer knowledge. Essential for absolute beginners.</p>
+                        <a href="<?= BASE_URL ?>student/enroll.php?type=1" class="btn btn-primary w-100 rounded-pill">View Courses</a>
+                    </div>
+                </div>
+            </div>
+            <!-- Professional Courses -->
+            <div class="col-md-6">
+                <div class="card h-100 border-0 shadow-sm" style="background: rgba(25, 135, 84, 0.05); border-radius: 12px; transition: transform 0.2s;">
+                    <div class="card-body text-center p-4">
+                        <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px; background: rgba(25, 135, 84, 0.1); color: #198754;">
+                            <i class="fa-solid fa-briefcase fs-3"></i>
+                        </div>
+                        <h5 class="fw-bold text-dark">Professional Upskilling</h5>
+                        <p class="text-muted small mb-4">Advanced modules designed for those who want to specialize in specific skills such as web development, data analysis, and hardware engineering.</p>
+                        <a href="<?= BASE_URL ?>student/enroll.php?type=2" class="btn btn-success w-100 rounded-pill">View Courses</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Modal -->
+
 <?php require_once __DIR__ . '/../includes/footer.php'; ?>

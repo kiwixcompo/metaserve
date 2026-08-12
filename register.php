@@ -24,24 +24,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = $auth->handleRegister($_POST);
     
     if ($result['status'] === 'success') {
-        // Handle enrollment
-        if (isset($_POST['programme_id'])) {
-            $prog_id = $_POST['programme_id'];
-            $course_id = $_POST['course_id'] ?? null;
-            $course_area = isset($_POST['course_area']) ? implode(', ', $_POST['course_area']) : null;
-            if(isset($_POST['course_area_other']) && !empty($_POST['course_area_other'])) {
-                $course_area .= ($course_area ? ', ' : '') . $_POST['course_area_other'];
-            }
-            
-            $stmt = $conn->prepare("SELECT id FROM enrollments WHERE user_id = ? AND programme_id = ?");
-            $stmt->execute([$result['user_id'], $prog_id]);
-            
-            if ($stmt->rowCount() == 0) {
-                $stmt = $conn->prepare("INSERT INTO enrollments (user_id, programme_id, course_id, status) VALUES (?, ?, ?, 'pending')");
-                $stmt->execute([$result['user_id'], $prog_id, $course_id]);
-            }
-        }
-        
         header("Location: " . $result['redirect']);
         exit;
     } else {
@@ -110,10 +92,6 @@ require_once __DIR__ . '/includes/header.php';
                         </div>
                         <div class="text-center position-relative z-1" style="background: #fff; padding: 0 10px; cursor: pointer;" onclick="goToStep(3)">
                             <div class="step-indicator" id="ind-3">3</div>
-                            <div class="mt-2 d-none d-sm-block text-muted small fw-bold">Programme</div>
-                        </div>
-                        <div class="text-center position-relative z-1" style="background: #fff; padding: 0 10px; cursor: pointer;" onclick="goToStep(4)">
-                            <div class="step-indicator" id="ind-4">4</div>
                             <div class="mt-2 d-none d-sm-block text-muted small fw-bold">Additional</div>
                         </div>
                     </div>
@@ -124,11 +102,11 @@ require_once __DIR__ . '/includes/header.php';
                             <h6 class="mb-2 fw-bold">PLEASE SELECT APPLICANT CATEGORY</h6>
                             <div class="d-flex justify-content-center gap-4">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="type" id="typeTSU" value="tsu_student" onchange="toggleCategoryFields()">
+                                    <input class="form-check-input" type="radio" name="type" id="typeTSU" value="tsu_student" onclick="toggleCategoryFields(this.value)">
                                     <label class="form-check-label fw-bold" for="typeTSU">TSU STUDENT (Taraba State University)</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="type" id="typeExt" value="external" onchange="toggleCategoryFields()">
+                                    <input class="form-check-input" type="radio" name="type" id="typeExt" value="external" onclick="toggleCategoryFields(this.value)">
                                     <label class="form-check-label fw-bold" for="typeExt">EXTERNAL CANDIDATE (Non-TSU Student)</label>
                                 </div>
                             </div>
@@ -263,114 +241,9 @@ require_once __DIR__ . '/includes/header.php';
                             </div>
                         </div>
 
-                        <!-- STEP 3: Programme Selection -->
+                        <!-- STEP 3: Additional Information -->
                         <div class="form-step" id="step-3">
-                            <h5 class="text-white p-2 rounded mb-4 fw-bold" style="background: var(--primary-color);">3. PROGRAMME & COURSE SELECTION</h5>
-                            
-                            <div class="row gy-4">
-                                <div class="col-md-12">
-                                    <label class="form-label fw-bold mb-3">Choose Programme Type *</label>
-                                    
-                                    <ul class="nav nav-pills nav-fill gap-2 p-1 bg-light border rounded-pill mb-4" id="programmeTabs" role="tablist">
-                                        <li class="nav-item" role="presentation">
-                                            <button class="nav-link active rounded-pill fw-bold" id="mandatory-tab" data-bs-toggle="tab" data-bs-target="#mandatory" type="button" role="tab" onclick="setProgramme(1)">Digital Literacy (Mandatory)</button>
-                                        </li>
-                                        <li class="nav-item" role="presentation">
-                                            <button class="nav-link rounded-pill fw-bold" id="professional-tab" data-bs-toggle="tab" data-bs-target="#professional" type="button" role="tab" onclick="setProgramme(2)">Professional Upskilling</button>
-                                        </li>
-                                    </ul>
-                                    
-                                    <input type="hidden" name="programme_id" id="programme_id" value="">
-                                    <?php
-                                        // Fetch programme IDs dynamically
-                                        $prog1_id = 1; $prog2_id = 2;
-                                        foreach($programmes as $p) {
-                                            if (stripos($p['name'], 'Mandatory') !== false || stripos($p['name'], 'Digital Literacy') !== false) {
-                                                $prog1_id = $p['id'];
-                                            } else if (stripos($p['name'], 'Professional') !== false) {
-                                                $prog2_id = $p['id'];
-                                            }
-                                        }
-                                    ?>
-                                    
-                                    <div class="tab-content" id="programmeTabsContent">
-                                        <div class="tab-pane fade show active" id="mandatory" role="tabpanel">
-                                            <div class="alert alert-info border-0 shadow-sm" style="background-color: rgba(13, 110, 253, 0.1); color: #084298;"><i class="fa-solid fa-circle-info me-2"></i> Mandatory courses for TSU students. Cost is calculated at checkout.</div>
-                                            <label class="form-label fw-bold">Select Mandatory Course *</label>
-                                            <select name="course_id_mandatory" id="course_id_mandatory" class="form-select clean-form-control course-select">
-                                                <option value="">Choose a course...</option>
-                                                <?php 
-                                                    $stmt1 = $conn->prepare("SELECT * FROM courses WHERE programme_id = ? AND is_active = 1 ORDER BY name ASC");
-                                                    $stmt1->execute([$prog1_id]);
-                                                    while($c = $stmt1->fetch()): 
-                                                ?>
-                                                    <option value="<?= $c['id'] ?>"><?= htmlspecialchars($c['name']) ?></option>
-                                                <?php endwhile; ?>
-                                            </select>
-                                        </div>
-                                        <div class="tab-pane fade" id="professional" role="tabpanel">
-                                            <div class="alert alert-success border-0 shadow-sm" style="background-color: rgba(25, 135, 84, 0.1); color: #0f5132;"><i class="fa-solid fa-star me-2"></i> Specialized professional courses. Cost is calculated at checkout.</div>
-                                            <label class="form-label fw-bold">Select Professional Course *</label>
-                                            <select name="course_id_professional" id="course_id_professional" class="form-select clean-form-control course-select">
-                                                <option value="">Choose a course...</option>
-                                                <?php 
-                                                    $stmt2 = $conn->prepare("SELECT * FROM courses WHERE programme_id = ? AND is_active = 1 ORDER BY name ASC");
-                                                    $stmt2->execute([$prog2_id]);
-                                                    while($c = $stmt2->fetch()): 
-                                                ?>
-                                                    <option value="<?= $c['id'] ?>"><?= htmlspecialchars($c['name']) ?></option>
-                                                <?php endwhile; ?>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <script>
-                                        // Set default to prog1 on load
-                                        document.addEventListener("DOMContentLoaded", function() {
-                                            document.getElementById('programme_id').value = '<?= $prog1_id ?>';
-                                        });
-                                        
-                                        function setProgramme(type) {
-                                            document.getElementById('programme_id').value = (type === 1) ? '<?= $prog1_id ?>' : '<?= $prog2_id ?>';
-                                        }
-                                    </script>
-                                </div>
-
-                                <div class="col-md-6 mt-5">
-                                    <label class="form-label fw-bold">Faculty / Field of Interest *</label>
-                                    <input type="text" name="faculty_interest" id="faculty_interest" class="form-control clean-form-control" placeholder="e.g. Engineering, Education, etc." required>
-                                </div>
-                                <div class="col-md-6 mt-5">
-                                    <label class="form-label fw-bold d-block">Preferred ICT Skills / Course Area (Select up to 3):</label>
-                                    <?php $areas = ['Data Analysis', 'Web Development', 'Cloud Computing', 'Digital Marketing']; ?>
-                                    <div class="row">
-                                    <?php foreach($areas as $area): ?>
-                                        <div class="col-6">
-                                            <div class="form-check mt-2">
-                                                <input class="form-check-input course-area-cb" type="checkbox" name="course_area[]" value="<?= $area ?>" id="area_<?= str_replace(' ', '', $area) ?>">
-                                                <label class="form-check-label" for="area_<?= str_replace(' ', '', $area) ?>"><?= $area ?></label>
-                                            </div>
-                                        </div>
-                                    <?php endforeach; ?>
-                                        <div class="col-12 mt-2">
-                                            <div class="form-check d-flex align-items-center gap-2">
-                                                <input class="form-check-input course-area-cb" type="checkbox" id="area_other">
-                                                <label class="form-check-label mb-0" for="area_other">Others (Specify):</label>
-                                                <input type="text" name="course_area_other" id="course_area_other" class="form-control form-control-sm w-50" disabled>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="d-flex justify-content-between mt-4">
-                                <button type="button" class="btn btn-outline-secondary px-5 py-2" onclick="prevStep(2)"><i class="fa-solid fa-arrow-left me-2"></i> Back</button>
-                                <button type="button" class="btn btn-primary-custom px-5 py-2" onclick="nextStep(4)">Next <i class="fa-solid fa-arrow-right ms-2"></i></button>
-                            </div>
-                        </div>
-
-                        <!-- STEP 4: Additional Information -->
-                        <div class="form-step" id="step-4">
-                            <h5 class="text-white p-2 rounded mb-4 fw-bold" style="background: var(--primary-color);">4. ADDITIONAL INFORMATION</h5>
+                            <h5 class="text-white p-2 rounded mb-4 fw-bold" style="background: var(--primary-color);">3. ADDITIONAL INFORMATION</h5>
                             
                             <div class="row gy-4">
                                 <div class="col-md-6">
@@ -455,13 +328,17 @@ require_once __DIR__ . '/includes/header.php';
         "Zamfara": ["Anka", "Bakura", "Birnin Magaji", "Bukkuyum", "Bungudu", "Gummi", "Gusau", "Kaura", "Namoda", "Maradun", "Maru", "Shinkafi", "Talata Mafara", "Tsafe", "Zurmi"]
     };
 
-    function toggleCategoryFields() {
-        const typeElem = document.querySelector('input[name="type"]:checked');
-        if(!typeElem) return;
+    function toggleCategoryFields(val) {
+        try {
+            let type = val;
+            if(!type) {
+                const typeElem = document.querySelector('input[name="type"]:checked');
+                if(!typeElem) return;
+                type = typeElem.value;
+            }
+            
+            document.getElementById('fullFormContainer').style.display = 'block';
         
-        document.getElementById('fullFormContainer').style.display = 'block';
-        
-        const type = typeElem.value;
         const tsuFields = document.getElementById('tsuFields');
         const extFields = document.getElementById('extFields');
         
@@ -481,14 +358,6 @@ require_once __DIR__ . '/includes/header.php';
             tsuLevels[0].required = true;
             hqInput.required = false;
             occInput.required = false;
-
-            // Update prices for TSU (Base Cost)
-            Array.from(progSelect.options).forEach(opt => {
-                if (opt.value !== "") {
-                    const baseCost = parseFloat(opt.getAttribute('data-base'));
-                    opt.text = opt.text.split(' - ')[0] + ' - ₦' + baseCost.toLocaleString('en-US', {minimumFractionDigits: 2});
-                }
-            });
         } else {
             tsuFields.style.display = 'none';
             extFields.style.display = 'flex';
@@ -497,15 +366,9 @@ require_once __DIR__ . '/includes/header.php';
             tsuLevels[0].required = false;
             hqInput.required = true;
             occInput.required = true;
-
-            // Update prices for External (Base Cost * 2.5)
-            Array.from(progSelect.options).forEach(opt => {
-                if (opt.value !== "") {
-                    const baseCost = parseFloat(opt.getAttribute('data-base'));
-                    const extCost = baseCost * 2.5;
-                    opt.text = opt.text.split(' - ')[0] + ' - ₦' + extCost.toLocaleString('en-US', {minimumFractionDigits: 2});
-                }
-            });
+        }
+        } catch (e) {
+            alert('JavaScript Error: ' + e.message);
         }
     }
 
@@ -619,18 +482,6 @@ require_once __DIR__ . '/includes/header.php';
             }
         }
 
-        if(step === 4) {
-            let progId = document.getElementById('programme_id').value;
-            let courseValid = false;
-            if (progId == 1 && document.getElementById('course_id_mandatory').value) courseValid = true;
-            if (progId == 2 && document.getElementById('course_id_professional').value) courseValid = true;
-            
-            if(!courseValid || !document.getElementById('faculty_interest').value) {
-                alert('Please select a course and fill in your Faculty / Field of Interest.');
-                return;
-            }
-        }
-
         document.querySelectorAll('.form-step').forEach(el => el.classList.remove('active'));
         document.querySelectorAll('.step-indicator').forEach(el => el.classList.remove('step-active'));
         
@@ -650,7 +501,7 @@ require_once __DIR__ . '/includes/header.php';
         document.getElementById(`ind-${step}`).classList.add('step-active');
         
         // Color completed steps indicator
-        for(let i=1; i<=4; i++) {
+        for(let i=1; i<=3; i++) {
             if(i < step) {
                 document.getElementById(`ind-${i}`).style.background = 'var(--primary-color)';
                 document.getElementById(`ind-${i}`).style.color = 'white';
@@ -706,46 +557,21 @@ require_once __DIR__ . '/includes/header.php';
         }
 
         // Step 3 Check
-        let progId = document.getElementById('programme_id').value;
-        let courseValid = false;
-        if (progId == 1 && document.getElementById('course_id_mandatory').value) courseValid = true;
-        if (progId == 2 && document.getElementById('course_id_professional').value) courseValid = true;
-        
-        if(!courseValid || !document.getElementById('faculty_interest').value) {
-            alert('Please select a course and fill in your Faculty / Field of Interest in Step 3.');
+        if(!document.querySelector('input[name="how_did_you_hear"]:checked')) {
+            alert('Please select how you heard about us in Step 3.');
             goToStep(3);
             return;
         }
-
-        // Step 4 Check
-        if(!document.querySelector('input[name="how_did_you_hear"]:checked')) {
-            alert('Please select how you heard about us in Step 4.');
-            goToStep(4);
-            return;
-        }
         if(!document.getElementById('why_join').value) {
-            alert('Please tell us why you want to join in Step 4.');
-            goToStep(4);
+            alert('Please tell us why you want to join in Step 3.');
+            goToStep(3);
             return;
         }
         if(!document.getElementById('declaration').checked) {
-            alert('You must accept the declaration in Step 4 to proceed.');
-            goToStep(4);
+            alert('You must accept the declaration in Step 3 to proceed.');
+            goToStep(3);
             return;
         }
-
-        // Set the actual course_id based on selected programme tab
-        let selectedCourse = (progId == 1) ? document.getElementById('course_id_mandatory').value : document.getElementById('course_id_professional').value;
-        
-        let courseInput = document.getElementById('final_course_id');
-        if(!courseInput) {
-            courseInput = document.createElement('input');
-            courseInput.type = 'hidden';
-            courseInput.name = 'course_id';
-            courseInput.id = 'final_course_id';
-            document.getElementById('registerForm').appendChild(courseInput);
-        }
-        courseInput.value = selectedCourse;
 
         // All good, submit!
         document.getElementById('registerForm').submit();

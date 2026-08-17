@@ -99,7 +99,7 @@ require_once __DIR__ . '/../includes/header.php';
                         </div>
                     </div>
 
-                    <form id="registerForm" method="POST" action="register.php">
+                    <form id="registerForm" method="POST" action="register_student.php">
                         
                         <div class="text-center mb-4 p-3 rounded" style="background: var(--primary-color); color: white;">
                             <h6 class="mb-2 fw-bold">PLEASE SELECT APPLICANT CATEGORY</h6>

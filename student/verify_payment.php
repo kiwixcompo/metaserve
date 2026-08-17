@@ -58,7 +58,7 @@ if ('success' === $result->data->status) {
     $stmt->execute([$reference, $enrollment_id, $_SESSION['user_id']]);
     
     $_SESSION['success_msg'] = "Payment successful! You are now fully enrolled in the course.";
-    header("Location: " . BASE_URL . "student/index.php");
+    header("Location: " . BASE_URL . "student/receipt.php?id=" . $enrollment_id);
     exit();
 } else {
     $_SESSION['error_msg'] = "Payment was not successful. Please try again.";

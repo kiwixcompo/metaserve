@@ -59,7 +59,10 @@ require_once __DIR__ . '/../includes/header.php';
                 <div class="clean-card p-4 mb-4">
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <h5 class="fw-bold text-dark mb-0"><i class="fa-solid fa-book-open me-2 text-secondary-custom"></i> My Learning Path</h5>
-                        <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#enrollModal"><i class="fa-solid fa-plus me-1"></i> Enroll in New Course</button>
+                        <div>
+                            <a href="receipts.php" class="btn btn-sm btn-outline-secondary me-2"><i class="fa-solid fa-receipt me-1"></i> Receipts</a>
+                            <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#enrollModal"><i class="fa-solid fa-plus me-1"></i> Enroll in New Course</button>
+                        </div>
                     </div>
                     
                     <?php if (isset($_SESSION['success_msg'])): ?>

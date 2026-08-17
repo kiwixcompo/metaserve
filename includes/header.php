@@ -39,6 +39,19 @@
                 <li class="nav-item"><a class="nav-link px-3" href="<?= BASE_URL ?>courses.php">Courses</a></li>
                 <li class="nav-item"><a class="nav-link px-3" href="<?= BASE_URL ?>contact.php">Contact</a></li>
                 <?php if (isset($_SESSION['user_id'])): ?>
+                    <?php 
+                        $dash_url = BASE_URL;
+                        switch($_SESSION['role_id'] ?? 0) {
+                            case 1: $dash_url .= 'admin/'; break;
+                            case 2: $dash_url .= 'accounts/'; break;
+                            case 3: $dash_url .= 'coordinator/'; break;
+                            case 4: $dash_url .= 'facilitator/'; break;
+                            case 5:
+                            case 6: $dash_url .= 'student/'; break;
+                            case 7: $dash_url .= 'management/'; break;
+                        }
+                    ?>
+                    <li class="nav-item"><a class="nav-link px-3" href="<?= $dash_url ?>"><i class="fa-solid fa-gauge me-1"></i> Dashboard</a></li>
                     <li class="nav-item"><a class="nav-link px-3" href="<?= BASE_URL ?>profile.php"><i class="fa-solid fa-user-circle me-1"></i> My Profile</a></li>
                     <li class="nav-item"><a class="nav-link px-3" href="<?= BASE_URL ?>src/Controllers/AuthController.php?action=logout">Logout</a></li>
                 <?php else: ?>

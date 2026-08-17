@@ -50,6 +50,9 @@ require_once __DIR__ . '/../includes/header.php';
 
 <section class="py-5 mt-5" style="background: linear-gradient(135deg, rgba(30,86,49,0.03) 0%, rgba(118,186,27,0.05) 100%); min-height: 85vh;">
     <div class="container py-4">
+        <div class="mb-3">
+            <a href="index.php" class="btn btn-outline-secondary"><i class="fa-solid fa-arrow-left me-2"></i> Back to Dashboard</a>
+        </div>
         <div class="row justify-content-center">
             <div class="col-lg-10">
                 <div class="clean-card p-4 p-md-5 bg-white shadow-sm" style="border-radius: 15px; border-top: 5px solid var(--primary-color);">

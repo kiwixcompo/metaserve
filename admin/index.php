@@ -147,7 +147,7 @@ require_once __DIR__ . '/../includes/header.php';
                             </div>
                             
                             <!-- Filters -->
-                            <div class="row g-3 mb-4 bg-light p-3 rounded border">
+                            <div class="row g-3 mb-2 bg-light p-3 rounded border">
                                 <div class="col-md-4">
                                     <label class="form-label small fw-bold text-muted">Search User</label>
                                     <div class="input-group input-group-sm">
@@ -179,6 +179,9 @@ require_once __DIR__ . '/../includes/header.php';
                                         </ul>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="mb-3 text-muted small fw-bold">
+                                Showing <span id="userCount" class="text-primary-custom"><?= count($allUsers) ?></span> users
                             </div>
 
                             <form action="<?= BASE_URL ?>src/Controllers/AdminController.php?action=bulk_users_action" method="POST" id="bulkUsersForm">
@@ -694,6 +697,7 @@ function filterUsers() {
     const searchVal = document.getElementById('userSearchInput').value.toLowerCase();
     const roleVal = document.getElementById('userRoleFilter').value;
     const rows = document.querySelectorAll('.user-row');
+    let visibleCount = 0;
     
     rows.forEach(row => {
         const name = row.querySelector('.user-name').textContent.toLowerCase();
@@ -705,10 +709,14 @@ function filterUsers() {
         
         if (matchesSearch && matchesRole) {
             row.style.display = '';
+            visibleCount++;
         } else {
             row.style.display = 'none';
         }
     });
+
+    const countEl = document.getElementById('userCount');
+    if (countEl) countEl.textContent = visibleCount;
 }
 
 document.getElementById('userSearchInput')?.addEventListener('input', filterUsers);

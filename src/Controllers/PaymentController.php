@@ -107,7 +107,7 @@ class PaymentController {
         // Move the uploaded file to the tellers directory
         if (move_uploaded_file($file['tmp_name'], $destination)) {
             // Create pending database record
-            $this->paymentModel->createPayment([
+            $dbResult = $this->paymentModel->createPayment([
                 'enrollment_id' => $enrollment_id,
                 'user_id' => $user_id,
                 'amount' => $amount,
@@ -116,7 +116,12 @@ class PaymentController {
                 'teller_path' => $filename,
                 'status' => 'pending'
             ]);
-            return ['status' => 'success', 'message' => 'Teller uploaded successfully. It is now pending admin approval.'];
+            
+            if ($dbResult) {
+                return ['status' => 'success', 'message' => 'Teller uploaded successfully. It is now pending admin approval.'];
+            } else {
+                return ['status' => 'error', 'message' => 'Failed to save payment record to database.'];
+            }
         }
         return ['status' => 'error', 'message' => 'System failed to save the uploaded image. Please try again.'];
     }

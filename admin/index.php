@@ -212,7 +212,7 @@ require_once __DIR__ . '/../includes/header.php';
                                 </div>
 
                                 <div class="table-responsive">
-                                    <table class="table table-hover align-middle" id="usersTable">
+                                    <table class="table table-hover align-middle table-sm" id="usersTable" style="font-size: 0.9rem;">
                                         <thead class="table-light">
                                             <tr>
                                                 <th style="width: 40px;">
@@ -220,6 +220,7 @@ require_once __DIR__ . '/../includes/header.php';
                                                 </th>
                                                 <th>Name</th>
                                                 <th>Email</th>
+                                                <th>Phone</th>
                                                 <th>Role</th>
                                                 <th>Registered</th>
                                                 <th>Action</th>
@@ -239,7 +240,8 @@ require_once __DIR__ . '/../includes/header.php';
                                                         <span class="badge bg-danger ms-1" style="font-size: 0.65em;">Deactivated</span>
                                                     <?php endif; ?>
                                                 </td>
-                                                <td class="user-email"><?= htmlspecialchars($user['email']) ?></td>
+                                                <td class="user-email text-break" style="max-width: 200px;"><?= htmlspecialchars($user['email']) ?></td>
+                                                <td class="user-phone"><?= htmlspecialchars($user['phone'] ?? 'N/A') ?></td>
                                                 <td><span class="badge bg-secondary"><?= htmlspecialchars($user['role_name']) ?></span></td>
                                                 <td class="small text-muted"><?= date('M j, Y', strtotime($user['created_at'])) ?></td>
                                                 <td>

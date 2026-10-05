@@ -35,7 +35,7 @@ class Admin {
     }
 
     public function getAllUsers() {
-        $query = "SELECT u.id, u.first_name, u.last_name, u.email, u.created_at, u.is_active, r.name as role_name 
+        $query = "SELECT u.id, u.first_name, u.last_name, u.email, u.phone, u.created_at, u.is_active, r.name as role_name 
                   FROM users u 
                   JOIN roles r ON u.role_id = r.id 
                   ORDER BY u.created_at DESC";

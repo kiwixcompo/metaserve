@@ -21,13 +21,14 @@ $errors = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $auth = new AuthController();
-    $result = $auth->handleRegister($_POST);
+    $result = $auth->handleRegister($_POST, true);
     
     if ($result['status'] === 'success') {
         // Mark user as having purchased a physical form (bypasses the 2k admin charge)
         $conn->query("UPDATE users SET form_purchased = 1 WHERE id = " . (int)$result['user_id']);
         
-        header("Location: " . BASE_URL . "accounts/register_student.php?success=registered");
+        $regId = urlencode($result['registration_id'] ?? '');
+        header("Location: " . BASE_URL . "accounts/register_student.php?success=registered&reg_id=" . $regId);
         exit;
     } else {
         $errors = $result['errors'];
@@ -65,11 +66,16 @@ require_once __DIR__ . '/../includes/header.php';
 
                     <?php if (isset($_GET['success']) && $_GET['success'] === 'registered'): ?>
                         <div class="alert alert-success border-0 p-5 mb-4 shadow-sm text-center" style="background: #e6f4ea; color: #1e5631; border-radius: 12px;">
-                            <i class="fa-solid fa-envelope-circle-check" style="font-size: 3rem; margin-bottom: 15px;"></i>
-                            <h4 class="fw-bold mb-3">Registration Successful!</h4>
-                            <p class="mb-0 fs-5">We've sent a verification link to your email address.</p>
-                            <p class="text-muted mt-2">Please check your inbox (and spam folder) and click the link to verify your account and gain access to your dashboard.</p>
-                            <a href="<?= BASE_URL ?>login.php" class="btn btn-primary-custom mt-4 px-4 py-2">Go to Login</a>
+                            <i class="fa-solid fa-circle-check" style="font-size: 3rem; margin-bottom: 15px;"></i>
+                            <h4 class="fw-bold mb-3">Student Registration Successful!</h4>
+                            <?php if (!empty($_GET['reg_id'])): ?>
+                                <p class="mb-2 fs-5">Student Registration ID: <strong class="text-primary-custom"><?= htmlspecialchars($_GET['reg_id']) ?></strong></p>
+                            <?php endif; ?>
+                            <p class="text-muted mt-2">The student account has been created. The student can log in using their Registration ID or Email Address (if provided).</p>
+                            <div class="d-flex justify-content-center gap-3 mt-4">
+                                <a href="<?= BASE_URL ?>accounts/register_student.php" class="btn btn-primary-custom px-4 py-2"><i class="fa-solid fa-user-plus me-2"></i>Register Another Student</a>
+                                <a href="<?= BASE_URL ?>accounts/index.php" class="btn btn-outline-secondary px-4 py-2">Back to Dashboard</a>
+                            </div>
                         </div>
                     <?php else: ?>
 
@@ -178,8 +184,8 @@ require_once __DIR__ . '/../includes/header.php';
                                 </div>
 
                                 <div class="col-md-12">
-                                    <label class="form-label fw-bold">Email Address *</label>
-                                    <input type="email" name="email" class="form-control clean-form-control" required>
+                                    <label class="form-label fw-bold">Email Address <span class="text-muted fw-normal">(Optional)</span></label>
+                                    <input type="email" name="email" class="form-control clean-form-control" placeholder="Optional - can be left blank">
                                 </div>
 
                                 <div class="col-md-6">
@@ -448,7 +454,7 @@ require_once __DIR__ . '/../includes/header.php';
             let nationality = document.getElementById('nationality').value;
             let formValid = true;
             
-            ['full_name', 'dob', 'nationality', 'phone', 'email'].forEach(f => {
+            ['full_name', 'dob', 'nationality', 'phone'].forEach(f => {
                 if(!document.querySelector(`[name="${f}"]`).value) formValid = false;
             });
             
@@ -526,7 +532,7 @@ require_once __DIR__ . '/../includes/header.php';
         let conf = document.getElementById('confirm_password').value;
         let nationality = document.getElementById('nationality').value;
         let step1Valid = true;
-        ['full_name', 'dob', 'nationality', 'phone', 'email'].forEach(f => {
+        ['full_name', 'dob', 'nationality', 'phone'].forEach(f => {
             if(!document.querySelector(`[name="${f}"]`).value) step1Valid = false;
         });
         if (nationality === 'Nigerian') {

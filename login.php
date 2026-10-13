@@ -48,10 +48,10 @@ require_once __DIR__ . '/includes/header.php';
 
                         
                         <div class="mb-4">
-                            <label class="form-label">Email Address</label>
+                            <label class="form-label">Email Address or Registration ID</label>
                             <div class="input-group">
-                                <span class="input-group-text bg-white border-end-0 text-muted"><i class="fa-solid fa-envelope"></i></span>
-                                <input type="email" name="email" class="form-control clean-form-control border-start-0 ps-0" required placeholder="name@example.com">
+                                <span class="input-group-text bg-white border-end-0 text-muted"><i class="fa-solid fa-user"></i></span>
+                                <input type="text" name="email" class="form-control clean-form-control border-start-0 ps-0" required placeholder="name@example.com or Registration ID">
                             </div>
                         </div>
                         <div class="mb-4">

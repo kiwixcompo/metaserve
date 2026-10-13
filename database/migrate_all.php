@@ -69,6 +69,16 @@ try {
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
     $conn->exec($sqlSettings);
 
+    // 4. Ensure email column in users table allows NULL (for registrations done without email)
+    echo "Ensuring `email` column in users table allows NULL...\n";
+    try {
+        $conn->exec("ALTER TABLE `users` MODIFY COLUMN `email` VARCHAR(150) NULL");
+        echo "✓ Modified email column to allow NULL.\n";
+    } catch (PDOException $e) {
+        // In case modify syntax or constraint differs
+        echo "Notice on email column modification: " . $e->getMessage() . "\n";
+    }
+
     echo "\n<strong style='color: green;'>All missing columns have been successfully added!</strong>\n";
     echo "You can now safely test the registration page.";
 

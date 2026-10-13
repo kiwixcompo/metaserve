@@ -13,6 +13,7 @@ class User {
 
     // Check if email already exists
     public function emailExists($email) {
+        if (empty($email)) return false;
         $query = "SELECT id FROM " . $this->table . " WHERE email = :email LIMIT 1";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':email', $email);
@@ -45,7 +46,7 @@ class User {
         $stmt->bindValue(':role_id', $data['role_id']);
         $stmt->bindValue(':first_name', htmlspecialchars(strip_tags($data['first_name'])));
         $stmt->bindValue(':last_name', htmlspecialchars(strip_tags($data['last_name'])));
-        $stmt->bindValue(':email', htmlspecialchars(strip_tags($data['email'])));
+        $stmt->bindValue(':email', !empty($data['email']) ? htmlspecialchars(strip_tags($data['email'])) : null);
         $stmt->bindValue(':password_hash', password_hash($data['password'], PASSWORD_BCRYPT));
         $stmt->bindValue(':phone', htmlspecialchars(strip_tags($data['phone'])));
         $stmt->bindValue(':type', $data['type']);
@@ -76,11 +77,11 @@ class User {
         return false;
     }
 
-    // Login a user
-    public function login($email, $password) {
-        $query = "SELECT * FROM " . $this->table . " WHERE email = :email LIMIT 1";
+    // Login a user (accepts email, registration_id, or reg_number)
+    public function login($identifier, $password) {
+        $query = "SELECT * FROM " . $this->table . " WHERE (email = :identifier OR registration_id = :identifier OR reg_number = :identifier) LIMIT 1";
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':identifier', $identifier);
         $stmt->execute();
 
         if ($stmt->rowCount() > 0) {

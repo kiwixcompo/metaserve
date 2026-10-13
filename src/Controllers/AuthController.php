@@ -10,7 +10,7 @@ class AuthController {
         $this->userModel = new User();
     }
 
-    public function handleRegister($postData) {
+    public function handleRegister($postData, $isAccountManager = false) {
         $errors = [];
         
         // Split full_name
@@ -20,16 +20,23 @@ class AuthController {
         $postData['last_name'] = !empty($nameParts) ? implode(' ', $nameParts) : '';
 
         // 1. Basic Validation
-        if (empty($postData['first_name']) || empty($postData['email']) || empty($postData['password']) || empty($postData['type'])) {
+        if (empty($postData['first_name']) || empty($postData['password']) || empty($postData['type'])) {
             $errors[] = "Please fill in all required fields.";
         }
 
-        if (!filter_var($postData['email'], FILTER_VALIDATE_EMAIL)) {
-            $errors[] = "Invalid email format.";
+        $email = trim($postData['email'] ?? '');
+        if (!$isAccountManager && empty($email)) {
+            $errors[] = "Email address is required.";
         }
 
-        if ($this->userModel->emailExists($postData['email'])) {
-            $errors[] = "Email is already registered.";
+        if (!empty($email)) {
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $errors[] = "Invalid email format.";
+            } elseif ($this->userModel->emailExists($email)) {
+                $errors[] = "Email is already registered.";
+            }
+        } else {
+            $postData['email'] = null;
         }
 
         // 2. TSU Student vs External Candidate Logic
@@ -68,23 +75,26 @@ class AuthController {
         $userId = $this->userModel->register($postData);
 
         if ($userId) {
-            // Send Verification Email
-            require_once __DIR__ . '/../Models/EmailService.php';
-            $emailService = new \App\Models\EmailService();
-            $emailService->sendVerificationEmail($postData['email'], $postData['first_name'], $postData['verification_token']);
+            // Send Verification Email only if email is provided
+            if (!empty($postData['email'])) {
+                require_once __DIR__ . '/../Models/EmailService.php';
+                $emailService = new \App\Models\EmailService();
+                $emailService->sendVerificationEmail($postData['email'], $postData['first_name'], $postData['verification_token']);
+            }
 
-            return ['status' => 'success', 'redirect' => BASE_URL . 'register.php?success=registered', 'user_id' => $userId];
+            return ['status' => 'success', 'redirect' => BASE_URL . 'register.php?success=registered', 'user_id' => $userId, 'registration_id' => $postData['registration_id']];
         } else {
             return ['status' => 'error', 'errors' => ['Failed to register. Please try again.']];
         }
     }
 
-    public function handleLogin($email, $password) {
-        if (empty($email) || empty($password)) {
-            return ['status' => 'error', 'message' => 'Email and password are required.'];
+    public function handleLogin($identifier, $password) {
+        $identifier = trim($identifier ?? '');
+        if (empty($identifier) || empty($password)) {
+            return ['status' => 'error', 'message' => 'Email/Registration ID and password are required.'];
         }
 
-        $userData = $this->userModel->login($email, $password);
+        $userData = $this->userModel->login($identifier, $password);
 
         if ($userData) {
             // Check if account is active
@@ -92,15 +102,15 @@ class AuthController {
                 return ['status' => 'error', 'message' => 'Your account has been deactivated. Please contact the administrator.'];
             }
 
-            // Check if email is verified
-            if (isset($userData['email_verified']) && $userData['email_verified'] == 0) {
+            // Check if email is verified (only enforced if an email address exists)
+            if (!empty($userData['email']) && isset($userData['email_verified']) && $userData['email_verified'] == 0) {
                 return ['status' => 'error', 'message' => 'Please verify your email address before logging in. Check your inbox for the verification link.'];
             }
 
             $this->setSession($userData);
             return ['status' => 'success', 'redirect' => $this->getDashboardRoute($userData['role_id'])];
         } else {
-            return ['status' => 'error', 'message' => 'Invalid email or password.'];
+            return ['status' => 'error', 'message' => 'Invalid credentials.'];
         }
     }
 

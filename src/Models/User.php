@@ -33,11 +33,12 @@ class User {
 
     // Register a new user
     public function register($data) {
+        $emailVerified = !empty($data['email_verified']) ? 1 : 0;
         $query = "INSERT INTO " . $this->table . " 
-                  (role_id, first_name, last_name, email, password_hash, phone, type, reg_number,
+                  (role_id, first_name, last_name, email, email_verified, password_hash, phone, type, reg_number,
                    dob, gender, nationality, state_of_origin, lga, alt_phone, department_id, level,
                    highest_qualification, occupation, faculty_interest, how_did_you_hear, why_join, registration_id, verification_token) 
-                  VALUES (:role_id, :first_name, :last_name, :email, :password_hash, :phone, :type, :reg_number,
+                  VALUES (:role_id, :first_name, :last_name, :email, :email_verified, :password_hash, :phone, :type, :reg_number,
                    :dob, :gender, :nationality, :state_of_origin, :lga, :alt_phone, :department_id, :level,
                    :highest_qualification, :occupation, :faculty_interest, :how_did_you_hear, :why_join, :registration_id, :verification_token)";
         
@@ -46,7 +47,12 @@ class User {
         $stmt->bindValue(':role_id', $data['role_id']);
         $stmt->bindValue(':first_name', htmlspecialchars(strip_tags($data['first_name'])));
         $stmt->bindValue(':last_name', htmlspecialchars(strip_tags($data['last_name'])));
-        $stmt->bindValue(':email', !empty($data['email']) ? htmlspecialchars(strip_tags($data['email'])) : null);
+        if (!empty($data['email'])) {
+            $stmt->bindValue(':email', htmlspecialchars(strip_tags($data['email'])), PDO::PARAM_STR);
+        } else {
+            $stmt->bindValue(':email', null, PDO::PARAM_NULL);
+        }
+        $stmt->bindValue(':email_verified', $emailVerified, PDO::PARAM_INT);
         $stmt->bindValue(':password_hash', password_hash($data['password'], PASSWORD_BCRYPT));
         $stmt->bindValue(':phone', htmlspecialchars(strip_tags($data['phone'])));
         $stmt->bindValue(':type', $data['type']);

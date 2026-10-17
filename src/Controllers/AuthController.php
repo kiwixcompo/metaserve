@@ -67,16 +67,22 @@ class AuthController {
             return ['status' => 'error', 'errors' => $errors];
         }
 
-        // Generate verification token
-        $postData['verification_token'] = bin2hex(random_bytes(16));
+        // Verification token & email verified state
+        if ($isAccountManager) {
+            $postData['email_verified'] = 1;
+            $postData['verification_token'] = null;
+        } else {
+            $postData['email_verified'] = 0;
+            $postData['verification_token'] = bin2hex(random_bytes(16));
+        }
         $postData['role_id'] = $role_id;
         
         // 4. Register the user
         $userId = $this->userModel->register($postData);
 
         if ($userId) {
-            // Send Verification Email only if email is provided
-            if (!empty($postData['email'])) {
+            // Send Verification Email only if public registration with email provided
+            if (!$isAccountManager && !empty($postData['email'])) {
                 require_once __DIR__ . '/../Models/EmailService.php';
                 $emailService = new \App\Models\EmailService();
                 $emailService->sendVerificationEmail($postData['email'], $postData['first_name'], $postData['verification_token']);

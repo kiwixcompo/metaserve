@@ -24,8 +24,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = $auth->handleRegister($_POST, true);
     
     if ($result['status'] === 'success') {
-        // Mark user as having purchased a physical form (bypasses the 2k admin charge)
-        $conn->query("UPDATE users SET form_purchased = 1 WHERE id = " . (int)$result['user_id']);
+        // Mark user as having purchased a physical form and pre-verified by Accounts
+        $conn->query("UPDATE users SET form_purchased = 1, email_verified = 1 WHERE id = " . (int)$result['user_id']);
         
         $regId = urlencode($result['registration_id'] ?? '');
         header("Location: " . BASE_URL . "accounts/register_student.php?success=registered&reg_id=" . $regId);

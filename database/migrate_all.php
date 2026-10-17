@@ -79,6 +79,13 @@ try {
         echo "Notice on email column modification: " . $e->getMessage() . "\n";
     }
 
+    // 5. Diagnostics / Git pull trigger
+    echo "\nTriggering git fetch & pull...\n";
+    $gitOutput = shell_exec("git status 2>&1");
+    echo "Git status: " . $gitOutput . "\n";
+    $pullOutput = shell_exec("git pull origin main 2>&1");
+    echo "Git pull: " . $pullOutput . "\n";
+
     echo "\n<strong style='color: green;'>All missing columns have been successfully added!</strong>\n";
     echo "You can now safely test the registration page.";
 
